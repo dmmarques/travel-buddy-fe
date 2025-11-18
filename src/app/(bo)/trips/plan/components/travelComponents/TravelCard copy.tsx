@@ -94,6 +94,10 @@ export default function TravelCard({
         estimatedDuration: estimatedDuration ?? "",
         distance: estimatedDistance ?? "",
         name: `${data.origin} to ${data.destination}`,
+        transport: "", // Provide a default or select value as needed
+        departureDate: new Date(), // Default to now, or set as needed
+        arrivalDate: new Date(), // Default to now, or set as needed
+        genTravelCost: { fuel: 0, tollCost: 0, totalCost: 0 }, // Default empty cost
       };
       onAddTravel(travel);
     }
@@ -131,6 +135,10 @@ export default function TravelCard({
         estimatedDuration: estimatedDuration ?? "",
         distance: estimatedDistance ?? "",
         name: `${data.origin} to ${data.destination} (Return)`,
+        transport: "", // Provide a default or select value as needed
+        departureDate: new Date(), // Default to now, or set as needed
+        arrivalDate: new Date(), // Default to now, or set as needed
+        genTravelCost: { fuel: 0, tollCost: 0, totalCost: 0 }, // Default empty cost
       };
       onAddTravel(travel);
     }
