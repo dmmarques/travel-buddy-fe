@@ -1,3 +1,14 @@
+/* Hide number input spinners for Chrome, Safari, Edge, Opera */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Hide number input spinners for Firefox */
+input[type="number"] {
+  -moz-appearance: textfield;
+}
 @import "tailwindcss";
 @import "tw-animate-css";
 @tailwind utilities;
@@ -120,4 +131,27 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+/* In your globals.css or a relevant CSS file */
+
+@keyframes alert-flash {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.3;
+  }
+}
+.flashing-alert {
+  animation: alert-flash 1s infinite;
+}
+@keyframes spin-slow {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.animate-spin-slow {
+  animation: spin-slow 2s linear infinite;
 }

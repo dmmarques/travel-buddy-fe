@@ -1,77 +1,144 @@
-export type ActivityDTO = {
-  id: string;
-  date: string; // YYYY-MM-DD
-  time: string; // HH:mm
-  title: string;
-  notes?: string;
-  price?: number; // number in your currency units
-};
+import { Accommodation } from "@/app/(bo)/trips/types/accommodation";
+import { Activity } from "@/app/(bo)/trips/types/activity";
+import { Travel } from "@/app/(bo)/trips/types/travel";
+import { Trip } from "@/app/(bo)/trips/types/trip";
+import axios from "axios";
 
-const BASE = "http://localhost:8080/travel-management-ms";
+const BASE_URL =
+  process.env.TRAVEL_API_BASE_URL ??
+  "http://localhost:8080/travel-management-ms";
 
-export async function listActivities(params: {
-  username: string;
-  tripName: string;
-}): Promise<ActivityDTO[]> {
-  const url = `${BASE}/activities?username=${encodeURIComponent(
-    params.username
-  )}&tripName=${encodeURIComponent(params.tripName)}`;
-
-  const res = await fetch(url, { cache: "no-store" });
-  if (!res.ok) {
-    throw new Error(`Failed to list activities (${res.status})`);
-  }
-  return res.json();
+// Delete a travel entry from a trip by name (unique per trip)
+export async function deleteTravelFromTrip(
+  tripId: string | number,
+  travelName: string
+) {
+  // Adjust endpoint and param name as per your backend API
+  const res = await axios.delete(`${BASE_URL}/trips/trip/${tripId}/travel`, {
+    params: { travelName },
+  });
+  return res.data;
 }
 
-export async function createActivity(input: {
-  username: string;
-  tripName: string;
-  date: string; // YYYY-MM-DD
-  time: string;
-  title: string;
-  notes?: string;
-  price?: number;
-}): Promise<ActivityDTO> {
-  const res = await fetch(`${BASE}/activities`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(input),
-  });
-  if (!res.ok) {
-    const text = await res.text().catch(() => "");
-    throw new Error(`Failed to create activity (${res.status}) ${text}`);
-  }
-  return res.json();
+export async function addActivityToTrip(tripId: string, activity: Activity) {
+  const res = await axios.put(`${BASE_URL}/trips/trip/${tripId}`, activity);
+  return res.data;
 }
 
-export async function updateActivity(
-  id: string,
-  input: Partial<
-    Pick<ActivityDTO, "date" | "time" | "title" | "notes" | "price">
-  > & {
-    username?: string;
-    tripName?: string;
-  }
-): Promise<ActivityDTO> {
-  const res = await fetch(`${BASE}/activities/${encodeURIComponent(id)}`, {
-    method: "PUT",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(input),
-  });
-  if (!res.ok) {
-    const text = await res.text().catch(() => "");
-    throw new Error(`Failed to update activity (${res.status}) ${text}`);
-  }
-  return res.json();
+export async function editActivity(tripId: string, activity: Activity) {
+  const res = await axios.put(`${BASE_URL}/trips/activity/${tripId}`, activity);
+  return res.data;
 }
 
-export async function deleteActivity(id: string): Promise<void> {
-  const res = await fetch(`${BASE}/activities/${encodeURIComponent(id)}`, {
-    method: "DELETE",
+export async function deleteActivity(tripId: string, activityId: string) {
+  const res = await axios.delete(`${BASE_URL}/trips/trip/${tripId}`, {
+    params: { activityId },
   });
-  if (!res.ok) {
-    const text = await res.text().catch(() => "");
-    throw new Error(`Failed to delete activity (${res.status}) ${text}`);
+  return res.data;
+}
+
+// If you have a `GET /trips/:username/:tripId` use that; otherwise fetch list and find by id.
+export async function getTripById(
+  username: string,
+  tripId: string | number
+): Promise<Trip | null> {
+  try {
+    const res = await axios.get<Trip>(
+      `${BASE_URL}/trips/${encodeURIComponent(username)}/${encodeURIComponent(
+        String(tripId)
+      )}`
+    );
+    return res.data;
+  } catch {}
+
+  try {
+    const resList = await axios.get<Trip[]>(
+      `${BASE_URL}/trips/${encodeURIComponent(username)}`
+    );
+    const list = resList.data;
+    const found = list.find((t) => String(t.id ?? t.tripId) === String(tripId));
+    return found ?? null;
+  } catch {
+    return null;
   }
+}
+
+export async function createTrip(trip: Partial<Trip>) {
+  const res = await axios.post(`${BASE_URL}/trips/trip`, trip);
+  return res.data;
+}
+
+export async function listTripsByUsername(username: string) {
+  const res = await axios.get(
+    `${BASE_URL}/trips/${encodeURIComponent(username)}`
+  );
+  return res.data;
+}
+
+export async function updateTrip(tripId: string | number, data: Partial<Trip>) {
+  const BASE_URL =
+    process.env.TRAVEL_API_BASE_URL ??
+    "http://localhost:8080/travel-management-ms";
+  return axios.put(`${BASE_URL}/trips/trip/partial/${tripId}`, data);
+}
+
+export async function addAccommodation(
+  tripId: string | number,
+  accommodation: Accommodation
+) {
+  const res = await axios.put(
+    `${BASE_URL}/trips/trip/${tripId}/accommodation`,
+    accommodation
+  );
+  return res.data;
+}
+
+export async function updateAccommodation(
+  tripId: string | number,
+  accommodation: Accommodation
+) {
+  const res = await axios.put(
+    `${BASE_URL}/trips/trip/${tripId}/accommodation/update`,
+    accommodation
+  );
+  return res.data;
+}
+
+export async function deleteAccommodation(
+  tripId: string | number,
+  accommodationId: string | number
+) {
+  const res = await axios.delete(
+    `${BASE_URL}/trips/trip/${tripId}/accommodation`,
+    {
+      params: { accommodationId },
+    }
+  );
+  return res.data;
+}
+
+export async function getAccommodations(tripId: string | number) {
+  const res = await axios.get(`${BASE_URL}/trips/trip/${tripId}/accommodation`);
+  return res.data;
+}
+
+export async function addTravelToTrip(tripId: string | number, travel: Travel) {
+  console.log("Adding travel to trip", tripId, travel);
+  const res = await axios.put(
+    `${BASE_URL}/trips/trip/${tripId}/travel`,
+    travel
+  );
+  return res.data;
+}
+
+export async function updateTravelFromTrip(
+  tripId: string | number,
+  travel: Travel
+) {
+  console.log("Updating travel from trip", tripId, travel);
+  const res = await axios.put(
+    `${BASE_URL}/trips/trip/${tripId}/travel/update`,
+    travel
+  );
+  return res.data;
 }
