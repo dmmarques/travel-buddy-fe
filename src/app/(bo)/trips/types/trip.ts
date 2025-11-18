@@ -17,4 +17,6 @@ export type Trip = {
   activityList?: Activity[];
   travelList?: import("./travel").Travel[];
   username?: string;
+  babies?: number;
+  pets?: number;
 };
