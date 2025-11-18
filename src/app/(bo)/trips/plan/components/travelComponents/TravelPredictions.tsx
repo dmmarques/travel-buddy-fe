@@ -9,8 +9,19 @@ import {
 import { PlaceAutocompleteResult } from "@googlemaps/google-maps-services-js/dist/places/autocomplete";
 import { useEffect, useState } from "react";
 
+type PlacePrediction = PlaceAutocompleteResult & {
+  formatted_address?: string;
+  description?: string;
+  geometry?: {
+    location: {
+      lat: number;
+      lng: number;
+    };
+  };
+};
+
 type PredictionsProps = {
-  onPick?: (place: any) => void;
+  onPick?: (place: PlacePrediction) => void;
 };
 
 export default function Predictions({ onPick }: PredictionsProps) {

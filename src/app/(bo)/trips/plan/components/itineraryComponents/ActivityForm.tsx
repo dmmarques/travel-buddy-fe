@@ -20,6 +20,18 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { format } from "date-fns";
+
+type Prediction = {
+  formatted_address?: string;
+  description?: string;
+  geometry?: {
+    location: {
+      lat: number;
+      lng: number;
+    };
+  };
+};
+
 import Predictions from "../accommodationComponents/Predictions";
 
 const activitySchema = z.object({
@@ -182,7 +194,7 @@ export function ActivityForm({
                 <div>
                   <Input placeholder="Address" {...field} />
                   <Predictions
-                    onPick={(prediction: any) => {
+                    onPick={(prediction: Prediction) => {
                       // Try to get the address from prediction details or fallback to description
                       const address =
                         prediction.formatted_address ||
