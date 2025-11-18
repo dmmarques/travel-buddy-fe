@@ -290,14 +290,16 @@ export default function TravelFormV2({
                           : main;
                         field.onChange(value);
                         console.log("Picked place:", place);
-                        console.log(
-                          "Picked place LAT:",
-                          place.geometry.location.lat
-                        );
-                        console.log(
-                          "Picked place LNG:",
-                          place.geometry.location.lng
-                        );
+                        if (place.geometry?.location) {
+                          console.log(
+                            "Picked place LAT:",
+                            place.geometry.location.lat
+                          );
+                          console.log(
+                            "Picked place LNG:",
+                            place.geometry.location.lng
+                          );
+                        }
                         // If place has geometry/location, call onFromPick
                         if (onFromPick && place.geometry?.location) {
                           const { lat, lng } = place.geometry.location;
