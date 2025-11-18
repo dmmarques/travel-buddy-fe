@@ -53,7 +53,9 @@ export const columns = (
         );
       }
       return (
-        <div className="flex justify-center items-center w-full">{value}</div>
+        <div className="flex justify-center items-center w-full">
+          {value as React.ReactNode}
+        </div>
       );
     },
   },
