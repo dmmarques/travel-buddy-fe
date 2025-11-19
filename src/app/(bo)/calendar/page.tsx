@@ -13,7 +13,9 @@ type Trip = {
   endDate: string;
 };
 
-const BASE_URL = "http://localhost:8080/travel-management-ms";
+const BASE_URL =
+  process.env.TRAVEL_API_BASE_URL ||
+  "https://travel-management-fs-production.up.railway.app";
 
 export default function AppMap() {
   const router = useRouter();

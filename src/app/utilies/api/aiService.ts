@@ -1,6 +1,8 @@
 import axios from "axios";
 
-const BASE_URL = "http://localhost:8081/travel-buddy/ai";
+const BASE_URL =
+  process.env.AI_API_BASE_URL ||
+  "https://ai-travel-buddy-production.up.railway.app";
 
 export async function getAIEstimatedTravelCost(
   fromLocation: string,

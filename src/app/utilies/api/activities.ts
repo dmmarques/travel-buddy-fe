@@ -6,7 +6,7 @@ import axios from "axios";
 
 const BASE_URL =
   process.env.TRAVEL_API_BASE_URL ??
-  "http://localhost:8080/travel-management-ms";
+  "https://travel-management-fs-production.up.railway.app";
 
 // Delete a travel entry from a trip by name (unique per trip)
 export async function deleteTravelFromTrip(
@@ -78,7 +78,7 @@ export async function listTripsByUsername(username: string) {
 export async function updateTrip(tripId: string | number, data: Partial<Trip>) {
   const BASE_URL =
     process.env.TRAVEL_API_BASE_URL ??
-    "http://localhost:8080/travel-management-ms";
+    "https://travel-management-fs-production.up.railway.app";
   return axios.put(`${BASE_URL}/trips/trip/partial/${tripId}`, data);
 }
 
