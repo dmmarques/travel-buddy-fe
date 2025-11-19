@@ -15,7 +15,7 @@ type Trip = {
 
 const BASE_URL =
   process.env.TRAVEL_API_BASE_URL ||
-  "https://travel-management-fs-production.up.railway.app";
+  "https://travel-management-fs-production.up.railway.app/travel-management-ms";
 
 export default function AppMap() {
   const router = useRouter();
