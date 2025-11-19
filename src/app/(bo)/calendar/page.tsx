@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { getCurrentUser } from "../../../../server/users";
 import { useRouter } from "next/navigation";
 import { Calendar } from "@/components/ui/calendar";
 import type { DateRange } from "react-day-picker";
@@ -24,19 +25,25 @@ export default function AppMap() {
     DateRange | undefined
   >();
   const [hoveredTripId, setHoveredTripId] = React.useState<string | null>(null);
-  const USERNAME = "dmmarques";
+  const [username, setUsername] = React.useState("");
 
-  // Fetch trips
+  // Fetch username and then trips
   React.useEffect(() => {
-    fetch(`${BASE_URL}/trips/${USERNAME}`)
-      .then(async (res) => {
+    async function fetchUserAndTrips() {
+      try {
+        const user = await getCurrentUser();
+        const uname = user?.currentUser?.name || "";
+        setUsername(uname);
+        if (!uname) return;
+        const res = await fetch(`${BASE_URL}/trips/${uname}`);
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        return res.json();
-      })
-      .then((data) => {
+        const data = await res.json();
         if (Array.isArray(data)) setTrips(data);
-      })
-      .catch((err) => console.error("Error fetching trips:", err));
+      } catch (err) {
+        console.error("Error fetching trips:", err);
+      }
+    }
+    fetchUserAndTrips();
   }, []);
 
   // Prepare ranges
@@ -116,7 +123,7 @@ export default function AppMap() {
                       router.push(
                         `/trips/plan?tripId=${encodeURIComponent(
                           tripId
-                        )}&mode=view&username=${USERNAME}`
+                        )}&mode=view&username=${username}`
                       );
                     }
                   }}
@@ -143,7 +150,7 @@ export default function AppMap() {
                         router.push(
                           `/trips/plan?tripId=${encodeURIComponent(
                             r.id
-                          )}&mode=view&username=${USERNAME}`
+                          )}&mode=view&username=${username}`
                         )
                       }
                     >

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { listTripsByUsername } from "@/app/utilies/api/activities";
 import { Trip } from "@/app/(bo)/trips/types/trip";
@@ -36,17 +36,19 @@ export default function Home() {
   const [username, setUsername] = useState<string>("");
   const router = useRouter();
 
-  useEffect(() => {
-    async function fetchUser() {
-      try {
-        const user = await getCurrentUser();
-        setUsername(user?.currentUser?.name || "");
-      } catch {
-        setUsername("");
-      }
+  // Always get username from getCurrentUser
+  const fetchUser = useCallback(async () => {
+    try {
+      const user = await getCurrentUser();
+      setUsername(user?.currentUser?.name || "");
+    } catch {
+      setUsername("");
     }
-    fetchUser();
   }, []);
+
+  useEffect(() => {
+    fetchUser();
+  }, [fetchUser]);
 
   useEffect(() => {
     async function fetchTrips() {
@@ -93,6 +95,7 @@ export default function Home() {
           const handleClick = (e: React.MouseEvent) => {
             e.preventDefault();
             if (!tripId) return;
+            // Always get username from state (set by getCurrentUser)
             router.push(
               `/trips/plan?mode=view&tripId=${encodeURIComponent(
                 String(tripId)

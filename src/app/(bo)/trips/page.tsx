@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { getCurrentUser } from "../../../../server/users";
 import type { DateRange } from "react-day-picker";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
@@ -35,7 +36,7 @@ export default function TripsDashboard() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const USERNAME = "dmmarques";
+  const [username, setUsername] = React.useState("");
 
   const [api, setApi] = React.useState<CarouselApi>();
   const [current, setCurrent] = React.useState(0);
@@ -55,31 +56,35 @@ export default function TripsDashboard() {
     setLoading(true);
     setError(null);
 
-    fetch(`${BASE_URL}/trips/${encodeURIComponent(USERNAME)}`)
-      .then(async (res) => {
+    async function fetchUserAndTrips() {
+      try {
+        const user = await getCurrentUser();
+        const uname = user?.currentUser?.name || "";
+        setUsername(uname);
+        if (!uname) return;
+        const res = await fetch(
+          `${BASE_URL}/trips/${encodeURIComponent(uname)}`
+        );
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        return res.json();
-      })
-      .then((data) => {
+        const data = await res.json();
         if (!isMounted) return;
         setTrips(Array.isArray(data) ? data : []);
-      })
-      .catch((err) => {
+      } catch (err) {
         if (!isMounted) return;
         console.error("Error loading trips:", err);
         setError("Failed to load trips. Please try again.");
-      })
-      .finally(() => {
+      } finally {
         if (!isMounted) return;
         setTimeout(() => {
           if (isMounted) setLoading(false);
         }, 1000);
-      });
-
+      }
+    }
+    fetchUserAndTrips();
     return () => {
       isMounted = false;
     };
-  }, [USERNAME]);
+  }, []);
 
   React.useEffect(() => {
     if (!api) return;
@@ -117,7 +122,7 @@ export default function TripsDashboard() {
         endDate: to,
         destination: "", // Add destination if needed
         budget: 0, // Add budget if needed
-        creatorUsername: USERNAME,
+        creatorUsername: username,
         activityList: [],
         accommodations: [],
         travelList: [],
@@ -135,7 +140,7 @@ export default function TripsDashboard() {
           router.push(
             `/trips/plan?mode=view&tripId=${encodeURIComponent(
               String(tripId)
-            )}&username=${encodeURIComponent(USERNAME)}`
+            )}&username=${encodeURIComponent(username)}`
           );
         })
         .catch((err) => {
@@ -159,7 +164,7 @@ export default function TripsDashboard() {
     router.push(
       `/trips/plan?mode=view&tripId=${encodeURIComponent(
         String(tripId)
-      )}&username=${encodeURIComponent(USERNAME)}`
+      )}&username=${encodeURIComponent(username)}`
     );
   };
 
@@ -331,7 +336,7 @@ export default function TripsDashboard() {
                 </div>
                 <div className="sr-only">
                   {/* keep username in URL flow */}
-                  <input readOnly name="username" value={USERNAME} />
+                  <input readOnly name="username" value={username} />
                 </div>
               </form>
             </CardContent>
