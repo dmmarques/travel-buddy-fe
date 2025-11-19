@@ -5,7 +5,7 @@ import { Trip } from "@/app/(bo)/trips/types/trip";
 import axios from "axios";
 
 const BASE_URL =
-  process.env.TRAVEL_API_BASE_URL ??
+  process.env.NEXT_PUBLIC_TRAVEL_API_BASE_URL ??
   "https://travel-management-fs-production.up.railway.app/travel-management-ms";
 
 // Delete a travel entry from a trip by name (unique per trip)
@@ -77,7 +77,7 @@ export async function listTripsByUsername(username: string) {
 
 export async function updateTrip(tripId: string | number, data: Partial<Trip>) {
   const BASE_URL =
-    process.env.TRAVEL_API_BASE_URL ??
+    process.env.NEXT_PUBLIC_TRAVEL_API_BASE_URL ??
     "https://travel-management-fs-production.up.railway.app/travel-management-ms";
   return axios.put(`${BASE_URL}/trips/trip/partial/${tripId}`, data);
 }
