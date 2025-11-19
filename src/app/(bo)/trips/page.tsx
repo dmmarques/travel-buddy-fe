@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import type { DateRange } from "react-day-picker";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
   Card,
@@ -42,9 +43,10 @@ export default function TripsDashboard() {
 
   // Create form state
   const [name, setName] = React.useState("");
-  const [dateRange, setDateRange] = React.useState<{ from?: Date; to?: Date }>(
-    {}
-  );
+  const [dateRange, setDateRange] = React.useState<DateRange>({
+    from: undefined,
+    to: undefined,
+  });
 
   React.useEffect(() => {
     let isMounted = true;
@@ -143,7 +145,7 @@ export default function TripsDashboard() {
 
   const handleReset = () => {
     setName("");
-    setDateRange({});
+    setDateRange({ from: undefined, to: undefined });
   };
 
   const goToTrip = (trip: Trip) => {
@@ -317,7 +319,11 @@ export default function TripsDashboard() {
                     <Label htmlFor="date">When are you going?</Label>
                     <RangeDatePicker
                       value={dateRange}
-                      onChange={setDateRange}
+                      onChange={(range) =>
+                        setDateRange(
+                          range ?? { from: undefined, to: undefined }
+                        )
+                      }
                     />
                   </div>
                 </div>
