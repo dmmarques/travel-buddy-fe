@@ -7,12 +7,13 @@ import { Trip } from "@/app/(bo)/trips/types/trip";
 import {
   getTotalPlannedCosts,
   getTotalKMs,
-  getTripStatusTotals,
   getNextIncomingTrip,
 } from "@/app/utilies/lib/tripStats";
 import { getTotalPlannedActivities } from "@/app/utilies/lib/getTotalPlannedActivities";
 import { getPlannedCostsBreakdown } from "@/app/utilies/lib/getPlannedCostsBreakdown";
+
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Earth } from "lucide-react";
 
 import { OverallCostPieChart } from "@/app/(bo)/landingPage/OverallCostPieChart";
 import { OverallActivityNumbers } from "@/app/(bo)/landingPage/OverallActivityNumbers";
@@ -63,6 +64,15 @@ export default function Home() {
       fetchTrips();
     }
   }, [username]);
+
+  if (loading) {
+    return (
+      <main className="flex flex-col items-center justify-center min-h-[300px]">
+        <Earth className="size-12 mb-4 animate-spin-slow text-primary" />
+        <span>Loading information...</span>
+      </main>
+    );
+  }
 
   return (
     <main>
