@@ -2,7 +2,7 @@ import axios from "axios";
 
 const BASE_URL =
   process.env.AI_API_BASE_URL ||
-  "https://ai-travel-buddy-production.up.railway.app/travel-management-ms";
+  "https://ai-travel-buddy-production.up.railway.app/travel-buddy/ai";
 
 export async function getAIEstimatedTravelCost(
   fromLocation: string,
