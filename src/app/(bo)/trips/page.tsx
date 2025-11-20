@@ -92,8 +92,6 @@ export default function TripsDashboard() {
 
     const onSelect = () => setCurrent(api.selectedScrollSnap() + 1);
     api.on("select", onSelect);
-
-    // ...existing code...
   }, [api]);
 
   const toYMD = (d?: Date) => {

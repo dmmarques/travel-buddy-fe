@@ -34,7 +34,7 @@ const items = [
   },
   {
     title: "Map",
-    url: "#",
+    url: "/map",
     icon: Map,
   },
 ];
