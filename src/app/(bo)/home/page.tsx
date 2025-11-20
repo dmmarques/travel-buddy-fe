@@ -69,9 +69,11 @@ export default function Home() {
 
   if (loading) {
     return (
-      <main className="flex flex-col items-center justify-center min-h-[300px]">
-        <Earth className="size-12 mb-4 animate-spin-slow text-primary" />
-        <span>Loading information...</span>
+      <main className="flex flex-col items-center justify-center min-h-screen">
+        <Earth className="size-12 mb-4 animate-spin-slow text-gray-400" />
+        <span className="text-gray-400 text-lg font-medium">
+          Loading information...
+        </span>
       </main>
     );
   }
