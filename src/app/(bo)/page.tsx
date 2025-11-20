@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { getSession } from "../../../lib/get-session";
 import { useRouter } from "next/navigation";
 import { listTripsByUsername } from "@/app/utilies/api/activities";
 import { Trip } from "@/app/(bo)/trips/types/trip";
@@ -23,10 +24,19 @@ export default function Home() {
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
+  const [username, setUsername] = useState<string>("");
+
   useEffect(() => {
     async function fetchTrips() {
       try {
-        const data = await listTripsByUsername("dmmarques");
+        const session = await getSession();
+        let name = "";
+        if (session && "data" in session && session.data?.user) {
+          name = session.data.user.name || session.data.user.email || "";
+        }
+        setUsername(name);
+        if (!name) throw new Error("No username found in session");
+        const data = await listTripsByUsername(name);
         setTrips(data as Trip[]);
       } catch {
         setError("Failed to fetch trips");
@@ -42,7 +52,6 @@ export default function Home() {
       {/* Next Trip Card as Button */}
       {(() => {
         const nextTrip = getNextIncomingTrip(trips);
-        const username = "dmmarques"; // TODO: Replace with session/local storage/auth context if needed
         if (!nextTrip)
           return (
             <Card className="w-100 m-2">

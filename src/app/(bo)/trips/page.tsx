@@ -305,10 +305,12 @@ export default function TripsDashboard() {
         <div className="flex-1 flex items-center justify-center">
           <Card className="w-[360px]">
             <CardHeader>
-              <CardTitle>Plan Trip</CardTitle>
-              <CardDescription>
-                Start planning your next adventure
-              </CardDescription>
+              <CardHeader className="flex flex-col items-center justify-center text-center">
+                <CardTitle>Plan Trip</CardTitle>
+                <CardDescription>
+                  Start planning your next adventure
+                </CardDescription>
+              </CardHeader>
             </CardHeader>
             <CardContent>
               <form onSubmit={handlePlanSubmit}>

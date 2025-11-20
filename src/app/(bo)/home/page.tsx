@@ -13,6 +13,7 @@ import { getTotalPlannedActivities } from "@/app/utilies/lib/getTotalPlannedActi
 import { getPlannedCostsBreakdown } from "@/app/utilies/lib/getPlannedCostsBreakdown";
 
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { Earth } from "lucide-react";
 
 import { OverallCostPieChart } from "@/app/(bo)/landingPage/OverallCostPieChart";
@@ -78,8 +79,15 @@ export default function Home() {
     );
   }
 
+  // Overlay for no trips
+  const showOverlay = !loading && !error && trips.length === 0;
+  const handleStartAdventure = (e: React.MouseEvent) => {
+    e.preventDefault();
+    router.push("/trips");
+  };
+
   return (
-    <main>
+    <main className="relative">
       {/* Top summary cards: Next Trip, Longest Trip, Shortest Trip, Trip Cost Extremes */}
       <div className="flex flex-row gap-4 mb-4">
         {/* Next Trip Card as Button */}
@@ -97,7 +105,6 @@ export default function Home() {
           const handleClick = (e: React.MouseEvent) => {
             e.preventDefault();
             if (!tripId) return;
-            // Always get username from state (set by getCurrentUser)
             router.push(
               `/trips/plan?mode=view&tripId=${encodeURIComponent(
                 String(tripId)
@@ -136,10 +143,20 @@ export default function Home() {
             </button>
           );
         })()}
-        {/* Longest Trip Card */}
+        {/* Longest Trip Card (always show, but empty if no trips) */}
         {(() => {
-          if (!trips || trips.length === 0) return null;
-          // Find the trip with the longest duration in days
+          if (!trips || trips.length === 0)
+            return (
+              <Card className="w-80 m-2 hover:shadow-lg focus:ring-2 focus:ring-primary opacity-50">
+                <CardHeader>
+                  <h2>Longest Trip</h2>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-muted-foreground">No data</div>
+                </CardContent>
+              </Card>
+            );
+          // ...existing code...
           let maxDays = 0;
           let longestTrip = null;
           for (const trip of trips) {
@@ -181,10 +198,20 @@ export default function Home() {
             </Card>
           );
         })()}
-        {/* Shortest Trip Card */}
+        {/* Shortest Trip Card (always show, but empty if no trips) */}
         {(() => {
-          if (!trips || trips.length === 0) return null;
-          // Find the trip with the shortest duration in days (at least 1 day)
+          if (!trips || trips.length === 0)
+            return (
+              <Card className="w-80 m-2 hover:shadow-lg focus:ring-2 focus:ring-primary opacity-50">
+                <CardHeader>
+                  <h2>Shortest Trip</h2>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-muted-foreground">No data</div>
+                </CardContent>
+              </Card>
+            );
+          // ...existing code...
           let minDays = Infinity;
           let shortestTrip = null;
           for (const trip of trips) {
@@ -228,14 +255,24 @@ export default function Home() {
             </Card>
           );
         })()}
-        {/* Trip Cost Extremes Card */}
+        {/* Trip Cost Extremes Card (always show, but empty if no trips) */}
         {(() => {
-          if (!trips || trips.length === 0) return null;
+          if (!trips || trips.length === 0)
+            return (
+              <Card className="w-80 m-2 hover:shadow-lg focus:ring-2 focus:ring-primary opacity-50">
+                <CardHeader>
+                  <h2>Most and Least expensive trips</h2>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-muted-foreground">No data</div>
+                </CardContent>
+              </Card>
+            );
+          // ...existing code...
           function getTripCost(trip: Trip) {
             let accommodation = 0;
             let travel = 0;
             let activities = 0;
-            // Travel costs
             if (trip.travelList) {
               for (const t of trip.travelList) {
                 const est =
@@ -245,7 +282,6 @@ export default function Home() {
                 if (!isNaN(est)) travel += est;
               }
             }
-            // Accommodation costs
             if (trip.accommodations) {
               for (const acc of trip.accommodations) {
                 if (acc.checkInDate && acc.checkOutDate) {
@@ -267,7 +303,6 @@ export default function Home() {
                 }
               }
             }
-            // Activity costs
             if (trip.activityList) {
               for (const act of trip.activityList) {
                 if (typeof act.cost === "number") activities += act.cost;
@@ -345,8 +380,8 @@ export default function Home() {
           );
         })()}
       </div>
-      {/* Totals summary as Cards */}
-      {!loading && !error && trips.length > 0 && (
+      {/* Totals summary as Cards (always show, but empty if no trips) */}
+      {!loading && !error && (
         <div className="flex flex-wrap gap-4 mb-6">
           {/* Card 1: Trips, Activities, KMs */}
           <div className="flex flex-row flex-1">
@@ -377,13 +412,18 @@ export default function Home() {
                 </CardHeader>
                 <CardContent>
                   {(() => {
+                    if (!trips || trips.length === 0) {
+                      return (
+                        <div className="text-muted-foreground text-sm">
+                          No data
+                        </div>
+                      );
+                    }
                     const breakdown = getPlannedCostsBreakdown(trips);
                     const numTrips = trips.length || 1;
-                    // Defensive: avoid division by zero
                     const avgAccommodation = breakdown.accommodation / numTrips;
                     const avgActivities = breakdown.activities / numTrips;
                     const avgTravel = breakdown.travel / numTrips;
-                    // Calculate average trip duration in days
                     let totalDays = 0;
                     let countedTrips = 0;
                     for (const trip of trips) {
@@ -446,6 +486,11 @@ export default function Home() {
             </CardHeader>
             <CardContent>
               {(() => {
+                if (!trips || trips.length === 0) {
+                  return (
+                    <div className="text-muted-foreground text-sm">No data</div>
+                  );
+                }
                 const breakdown = getPlannedCostsBreakdown(trips);
                 const total = getTotalPlannedCosts(trips);
                 return (
@@ -465,9 +510,35 @@ export default function Home() {
               <h3 className="text-lg font-semibold">Activities by Category</h3>
             </CardHeader>
             <CardContent>
-              <OverallActivityNumbers trips={trips} />
+              {trips && trips.length > 0 ? (
+                <OverallActivityNumbers trips={trips} />
+              ) : (
+                <div className="text-muted-foreground text-sm">No data</div>
+              )}
             </CardContent>
           </Card>
+        </div>
+      )}
+      {/* Overlay for no trips */}
+      {showOverlay && (
+        <div
+          className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-white/80 backdrop-blur-sm"
+          style={{ pointerEvents: "auto" }}
+        >
+          <div className="text-center p-8 rounded-lg shadow-lg bg-white/90 border border-gray-200">
+            <p className="text-lg font-semibold mb-4">
+              We noticed you haven&apos;t planned any trips yet.
+            </p>
+            <Button
+              className="underline"
+              onClick={handleStartAdventure}
+              style={{ display: "inline-block" }}
+              variant="default"
+              type="button"
+            >
+              Start planning your first adventure!
+            </Button>
+          </div>
         </div>
       )}
     </main>
