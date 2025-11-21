@@ -96,7 +96,7 @@ export default function AiCard({
           return (
             <div
               key={key}
-              className="border rounded-lg p-4 h-[550px] flex flex-col relative"
+              className="border rounded-lg p-4 h-[500px] flex flex-col relative"
             >
               <Button
                 className="absolute top-4 right-4 text-white px-3 py-1 rounded shadow"
@@ -115,7 +115,10 @@ export default function AiCard({
                 Total days: <span className="font-semibold">{totalDays}</span>
               </div>
               {results[key] && (
-                <div className="mt-2 text-sm text-blue-700 bg-blue-50 rounded p-2 max-h-400 overflow-auto">
+                <div
+                  className="mt-2 text-sm text-black bg-gray-50 rounded p-2"
+                  style={{ maxHeight: "500px", overflowY: "auto" }}
+                >
                   {results[key].error ? (
                     results[key].error
                   ) : Array.isArray(results[key].data) ? (
