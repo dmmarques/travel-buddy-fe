@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { Calendar } from "@/components/ui/calendar";
 import type { DateRange } from "react-day-picker";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Earth } from "lucide-react";
 
 type Trip = {
   id?: string | number;
@@ -91,8 +92,15 @@ export default function AppMap() {
     return found ? found.id : null;
   };
 
+  const isLoading = trips.length === 0;
   return (
-    <Card className="mx-auto h-full w-full">
+    <Card className="mx-auto h-full w-full relative">
+      {isLoading && (
+        <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-white/70 backdrop-blur-sm">
+          <Earth className="w-12 h-12 mb-2 animate-spin-slow text-primary/60" />
+          <span className="text-primary font-medium">Loading trips…</span>
+        </div>
+      )}
       <CardHeader className="border-b flex justify-center">
         <CardTitle className="text-xl font-semibold">My Calendar</CardTitle>
       </CardHeader>
