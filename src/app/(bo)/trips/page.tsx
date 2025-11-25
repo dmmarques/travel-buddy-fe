@@ -41,6 +41,7 @@ export default function TripsDashboard() {
   const [api, setApi] = React.useState<CarouselApi>();
   const [current, setCurrent] = React.useState(0);
   const [trips, setTrips] = React.useState<Trip[]>([]);
+  const [search, setSearch] = React.useState("");
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState<string | null>(null);
 
@@ -166,6 +167,13 @@ export default function TripsDashboard() {
     );
   };
 
+  // Filter trips by search
+  const filteredTrips = search.trim()
+    ? trips.filter((trip) =>
+        (trip.name || "").toLowerCase().includes(search.trim().toLowerCase())
+      )
+    : trips;
+
   return (
     <div className="flex min-h-[calc(100vh-2rem)] w-full items-center justify-center p-4">
       <div className="flex w-full max-w-5xl items-stretch gap-8">
@@ -177,6 +185,17 @@ export default function TripsDashboard() {
                 <CardTitle>Your Trips</CardTitle>
                 <CardDescription>Click a card to view details</CardDescription>
               </CardHeader>
+              {/* Search Box inside Card */}
+              <div className="mb-2 px-4">
+                <Input
+                  type="text"
+                  placeholder="Search trips by name..."
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  className="w-full"
+                  aria-label="Search trips by name"
+                />
+              </div>
               <CardContent>
                 <Carousel setApi={setApi} className="w-full">
                   <CarouselContent>
@@ -196,8 +215,8 @@ export default function TripsDashboard() {
                           </CardContent>
                         </Card>
                       </CarouselItem>
-                    ) : trips.length > 0 ? (
-                      trips.map((trip, index) => {
+                    ) : filteredTrips.length > 0 ? (
+                      filteredTrips.map((trip, index) => {
                         const label = trip.name || `Trip ${index + 1}`;
                         return (
                           <CarouselItem
@@ -290,7 +309,9 @@ export default function TripsDashboard() {
                 </Carousel>
               </CardContent>
               <CardFooter className="justify-center text-sm text-muted-foreground">
-                {trips.length > 0 ? `Trip ${current} of ${trips.length}` : "—"}
+                {filteredTrips.length > 0
+                  ? `Trip ${current} of ${filteredTrips.length}`
+                  : "—"}
               </CardFooter>
             </Card>
           </div>
