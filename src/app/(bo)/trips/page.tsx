@@ -42,6 +42,10 @@ export default function TripsDashboard() {
   const [current, setCurrent] = React.useState(0);
   const [trips, setTrips] = React.useState<Trip[]>([]);
   const [search, setSearch] = React.useState("");
+  const [filterDateRange, setFilterDateRange] = React.useState<DateRange>({
+    from: undefined,
+    to: undefined,
+  });
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState<string | null>(null);
 
@@ -167,12 +171,26 @@ export default function TripsDashboard() {
     );
   };
 
-  // Filter trips by search
-  const filteredTrips = search.trim()
-    ? trips.filter((trip) =>
-        (trip.name || "").toLowerCase().includes(search.trim().toLowerCase())
-      )
-    : trips;
+  // Helper to check if a trip is within the selected date range
+  const isWithinRange = (trip: Trip, range: DateRange) => {
+    if (!range.from || !range.to || !trip.startDate || !trip.endDate)
+      return true;
+    const tripStart = new Date(trip.startDate).setHours(0, 0, 0, 0);
+    const tripEnd = new Date(trip.endDate).setHours(0, 0, 0, 0);
+    const filterStart = range.from.setHours(0, 0, 0, 0);
+    const filterEnd = range.to.setHours(0, 0, 0, 0);
+    // Overlap: trip must have at least one day in the range
+    return tripEnd >= filterStart && tripStart <= filterEnd;
+  };
+
+  // Filter trips by search and date range
+  const filteredTrips = trips.filter((trip) => {
+    const matchesSearch = search.trim()
+      ? (trip.name || "").toLowerCase().includes(search.trim().toLowerCase())
+      : true;
+    const matchesDate = isWithinRange(trip, filterDateRange);
+    return matchesSearch && matchesDate;
+  });
 
   return (
     <div className="flex min-h-[calc(100vh-2rem)] w-full items-center justify-center p-4">
@@ -185,8 +203,8 @@ export default function TripsDashboard() {
                 <CardTitle>Your Trips</CardTitle>
                 <CardDescription>Click a card to view details</CardDescription>
               </CardHeader>
-              {/* Search Box inside Card */}
-              <div className="mb-2 px-4">
+              {/* Search & Date Filter Box inside Card */}
+              <div className="flex flex-row gap-2 px-4 mb-2 items-center">
                 <Input
                   type="text"
                   placeholder="Search trips by name..."
@@ -195,6 +213,31 @@ export default function TripsDashboard() {
                   className="w-full"
                   aria-label="Search trips by name"
                 />
+                <div className="flex items-center gap-1 shrink-0">
+                  <RangeDatePicker
+                    value={filterDateRange}
+                    onChange={(range) =>
+                      setFilterDateRange(
+                        range ?? { from: undefined, to: undefined }
+                      )
+                    }
+                    placeholder=""
+                  />
+                  {(filterDateRange.from || filterDateRange.to) && (
+                    <Button
+                      type="button"
+                      size="icon-sm"
+                      variant="ghost"
+                      aria-label="Clear date filter"
+                      onClick={() =>
+                        setFilterDateRange({ from: undefined, to: undefined })
+                      }
+                      className="ml-1"
+                    >
+                      <span aria-hidden="true">×</span>
+                    </Button>
+                  )}
+                </div>
               </div>
               <CardContent>
                 <Carousel setApi={setApi} className="w-full">
