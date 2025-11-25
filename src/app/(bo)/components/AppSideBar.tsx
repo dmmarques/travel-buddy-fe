@@ -1,11 +1,6 @@
-import {
-  PlaneTakeoff,
-  Calendar,
-  Map,
-  Users,
-  LogOut,
-  Earth,
-} from "lucide-react";
+"use client";
+
+import { PlaneTakeoff, Calendar, Map, LogOut, Earth } from "lucide-react";
 import {
   SidebarContent,
   SidebarFooter,
@@ -20,6 +15,8 @@ import {
   SidebarSeparator,
 } from "@/components/ui/sidebar";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { authClient } from "../../../../lib/auth-client";
 
 const items = [
   {
@@ -40,6 +37,11 @@ const items = [
 ];
 
 const AppSidebar = () => {
+  const router = useRouter();
+  const handleLogout = async () => {
+    await authClient.signOut();
+    router.push("/login");
+  };
   return (
     <Sidebar collapsible="icon">
       <SidebarHeader className="py-4">
@@ -77,7 +79,10 @@ const AppSidebar = () => {
       <SidebarFooter>
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton className="flex items-center justify-center w-full gap-2">
+            <SidebarMenuButton
+              className="flex items-center justify-center w-full gap-2"
+              onClick={handleLogout}
+            >
               <LogOut />
               <span>Logout</span>
             </SidebarMenuButton>
