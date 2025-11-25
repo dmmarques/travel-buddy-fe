@@ -12,13 +12,28 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 import { LogOut, UserRoundIcon } from "lucide-react";
-import { User } from "lucide-react";
-import { useRouter } from "next/navigation";
 import { authClient } from "../../../../lib/auth-client";
+import { useRouter } from "next/navigation";
+import { getCurrentUser } from "../../../../server/users";
 import { SidebarTrigger } from "@/components/ui/sidebar";
+
+import React, { useEffect, useState } from "react";
 
 const AppNavBar = () => {
   const router = useRouter();
+  const [username, setUsername] = useState<string | null>(null);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const user = await getCurrentUser();
+        const uname = user?.currentUser?.name || "";
+        setUsername(uname);
+      } catch {
+        setUsername("");
+      }
+    })();
+  }, []);
 
   const handleLogout = async () => {
     await authClient.signOut();
@@ -42,16 +57,19 @@ const AppNavBar = () => {
             </div>
           </DropdownMenuTrigger>
           <DropdownMenuContent sideOffset={10}>
-            <DropdownMenuLabel>My Account</DropdownMenuLabel>
+            <DropdownMenuLabel>
+              Logged in as{" "}
+              {username ? (
+                <span className="font-semibold">{username}</span>
+              ) : (
+                <span className="italic text-gray-400">Loading...</span>
+              )}
+            </DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <User />
-              Profile
-            </DropdownMenuItem>
             <DropdownMenuItem
               variant="destructive"
               onClick={handleLogout}
-              className="gap-2"
+              className="gap-2 flex justify-center items-center"
             >
               <LogOut className="size-4" />
               Logout
