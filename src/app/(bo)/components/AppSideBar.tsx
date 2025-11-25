@@ -47,7 +47,7 @@ const AppSidebar = () => {
       <SidebarHeader className="py-4">
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton asChild>
+            <SidebarMenuButton asChild tooltip="Home">
               <Link href="/home">
                 <Earth />
                 <span>Travel Buddy</span>
@@ -64,7 +64,7 @@ const AppSidebar = () => {
             <SidebarMenu>
               {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild>
+                  <SidebarMenuButton asChild tooltip={item.title}>
                     <Link href={item.url}>
                       <item.icon />
                       <span>{item.title}</span>
@@ -82,6 +82,7 @@ const AppSidebar = () => {
             <SidebarMenuButton
               className="flex items-center justify-center w-full gap-2"
               onClick={handleLogout}
+              tooltip="Logout"
             >
               <LogOut />
               <span>Logout</span>
