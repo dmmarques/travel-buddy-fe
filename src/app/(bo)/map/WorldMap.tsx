@@ -72,9 +72,9 @@ export default function WorldMap({ accommodations }: WorldMapProps) {
                 </button>
               </div>
               <p>
-                The points shown on the map represent all the cities you
-                visited. Each marker corresponds to a specific location you have
-                added or planned.
+                The points shown on the map represent all the cities you visited
+                or are planning to visit. Each marker corresponds to a specific
+                location you have added to the planning of your trips.
               </p>
             </div>
           )}
