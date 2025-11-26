@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { Calendar } from "@/components/ui/calendar";
 import type { DateRange } from "react-day-picker";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { Earth } from "lucide-react";
 
 type Trip = {
@@ -58,6 +59,23 @@ export default function AppMap() {
       id: trip.id ? String(trip.id) : String(index),
     }));
   }, [trips]);
+
+  // Trip filter state: "future" or "past"
+  const [tripFilter, setTripFilter] = React.useState<"future" | "past">(
+    "future"
+  );
+
+  // Filtered trips by filter state
+  const filteredRanges = React.useMemo(() => {
+    const now = new Date();
+    if (tripFilter === "future") {
+      // Show trips that are ongoing or in the future
+      return ranges.filter((r) => r.to >= now);
+    } else {
+      // Show trips that ended before today
+      return ranges.filter((r) => r.to < now);
+    }
+  }, [ranges, tripFilter]);
 
   // Calendar modifiers
   const modifiers = React.useMemo(() => {
@@ -139,12 +157,28 @@ export default function AppMap() {
               </div>
             </div>
 
-            {/* Next Trips */}
+            {/* Trip Filter Buttons and List */}
             <div className="mt-8 text-left">
-              <h3 className="text-lg font-medium mb-4">Next Trips</h3>
+              <div className="flex gap-4 mb-4">
+                {/* ShadCN Buttons for trip filter */}
+                <Button
+                  variant={tripFilter === "past" ? "default" : "outline"}
+                  onClick={() => setTripFilter("past")}
+                  className="min-w-[120px]"
+                >
+                  Past Trips
+                </Button>
+                <Button
+                  variant={tripFilter === "future" ? "default" : "outline"}
+                  onClick={() => setTripFilter("future")}
+                  className="min-w-[120px]"
+                >
+                  Future Trips
+                </Button>
+              </div>
               <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 text-gray-700">
-                {ranges.length > 0 ? (
-                  ranges.map((r) => (
+                {filteredRanges.length > 0 ? (
+                  filteredRanges.map((r) => (
                     <li
                       key={r.id}
                       className={`p-2 rounded cursor-pointer transition ${
