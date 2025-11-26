@@ -1,3 +1,18 @@
+@keyframes fade-glow {
+  0%,
+  100% {
+    opacity: 1;
+    text-shadow: 0 0 8px #22c55e, 0 0 16px #22c55e, 0 0 24px #22c55e;
+  }
+  50% {
+    opacity: 0.2;
+    text-shadow: 0 0 2px #22c55e;
+  }
+}
+.animate-blink {
+  animation: fade-glow 1.5s ease-in-out infinite;
+  color: #22c55e;
+}
 @keyframes spin-slow {
   100% {
     transform: rotate(360deg);

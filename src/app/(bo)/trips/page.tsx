@@ -183,14 +183,53 @@ export default function TripsDashboard() {
     return tripEnd >= filterStart && tripStart <= filterEnd;
   };
 
+  // Sort trips by start date ascending
+  const sortedTrips = [...trips].sort((a, b) => {
+    const aDate = a.startDate ? new Date(a.startDate).getTime() : 0;
+    const bDate = b.startDate ? new Date(b.startDate).getTime() : 0;
+    return aDate - bDate;
+  });
+
   // Filter trips by search and date range
-  const filteredTrips = trips.filter((trip) => {
+  const filteredTrips = sortedTrips.filter((trip) => {
     const matchesSearch = search.trim()
       ? (trip.name || "").toLowerCase().includes(search.trim().toLowerCase())
       : true;
     const matchesDate = isWithinRange(trip, filterDateRange);
     return matchesSearch && matchesDate;
   });
+
+  // Only scroll to the next/live trip on initial mount or when trips change, not on every api or filteredTrips change
+  const hasAutoScrolled = React.useRef(false);
+  React.useEffect(() => {
+    if (!api || filteredTrips.length === 0 || hasAutoScrolled.current) return;
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    let nextIndex = 0;
+    for (let i = 0; i < filteredTrips.length; i++) {
+      const trip = filteredTrips[i];
+      if (trip.startDate && trip.endDate) {
+        const start = new Date(trip.startDate);
+        const end = new Date(trip.endDate);
+        start.setHours(0, 0, 0, 0);
+        end.setHours(0, 0, 0, 0);
+        if (today >= start && today <= end) {
+          nextIndex = i;
+          break;
+        } else if (today < start) {
+          nextIndex = i;
+          break;
+        }
+      }
+    }
+    api.scrollTo(nextIndex);
+    hasAutoScrolled.current = true;
+  }, [api, filteredTrips]);
+
+  // Reset auto-scroll if trips change (e.g., after creating a new trip)
+  React.useEffect(() => {
+    hasAutoScrolled.current = false;
+  }, [trips.length]);
 
   return (
     <div className="flex min-h-[calc(100vh-2rem)] w-full items-center justify-center p-4">
@@ -325,9 +364,74 @@ export default function TripsDashboard() {
                                       : null}
                                   </div>
                                   <div className="text-xs text-muted-foreground text-center">
-                                    {typeof trip.budget === "number"
-                                      ? `Budget: €${trip.budget}`
-                                      : null}
+                                    {typeof trip.budget === "number" && (
+                                      <>
+                                        {`Budget: €${trip.budget}`}
+                                        {(() => {
+                                          if (trip.startDate && trip.endDate) {
+                                            const today = new Date();
+                                            today.setHours(0, 0, 0, 0);
+                                            const start = new Date(
+                                              trip.startDate
+                                            );
+                                            const end = new Date(trip.endDate);
+                                            start.setHours(0, 0, 0, 0);
+                                            end.setHours(0, 0, 0, 0);
+                                            if (
+                                              today >= start &&
+                                              today <= end
+                                            ) {
+                                              return (
+                                                <div className="mt-1">
+                                                  <span
+                                                    className="text-green-600 animate-blink font-bold"
+                                                    style={{
+                                                      textShadow:
+                                                        "0 0 2px #22c55e",
+                                                    }}
+                                                  >
+                                                    Live
+                                                  </span>
+                                                </div>
+                                              );
+                                            } else if (today < start) {
+                                              // Future trip: show days left
+                                              const msPerDay =
+                                                1000 * 60 * 60 * 24;
+                                              const daysLeft = Math.ceil(
+                                                (start.getTime() -
+                                                  today.getTime()) /
+                                                  msPerDay
+                                              );
+                                              return (
+                                                <div className="mt-1 font-semibold">
+                                                  {daysLeft === 1
+                                                    ? "In 1 day"
+                                                    : `In ${daysLeft} days`}
+                                                </div>
+                                              );
+                                            } else if (today > end) {
+                                              // Past trip: show days passed since end
+                                              const msPerDay =
+                                                1000 * 60 * 60 * 24;
+                                              const daysPassed = Math.ceil(
+                                                (today.getTime() -
+                                                  end.getTime()) /
+                                                  msPerDay
+                                              );
+                                              return (
+                                                <div className="mt-1 text-gray-500 font-semibold">
+                                                  {daysPassed === 1
+                                                    ? "1 day ago"
+                                                    : `${daysPassed} days ago`}
+                                                </div>
+                                              );
+                                            }
+                                          }
+                                          return null;
+                                        })()}
+                                      </>
+                                    )}
                                   </div>
                                 </div>
                               </CardContent>
