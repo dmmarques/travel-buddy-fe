@@ -260,7 +260,7 @@ export default function TripsDashboard() {
                         range ?? { from: undefined, to: undefined }
                       )
                     }
-                    placeholder=""
+                    placeholder="Date"
                     aria-label="Filter trips by date range"
                   />
                   {(filterDateRange.from || filterDateRange.to) && (
