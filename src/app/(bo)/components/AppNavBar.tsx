@@ -47,7 +47,7 @@ const AppNavBar = () => {
       {/* RIGHT SIDE */}
       <div className="flex items-center gap-4">
         <DropdownMenu>
-          <DropdownMenuTrigger>
+          <DropdownMenuTrigger aria-label="Open user menu">
             <div className="flex items-center">
               <Avatar className="mr-3 ring-2 ring-gray-400 ring-offset-[3px] ring-offset-background">
                 <AvatarFallback>
