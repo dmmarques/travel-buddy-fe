@@ -268,6 +268,7 @@ export default function TripsDashboard() {
                       size="icon-sm"
                       variant="ghost"
                       aria-label="Clear date filter"
+                      title="Clear date filter"
                       onClick={() =>
                         setFilterDateRange({ from: undefined, to: undefined })
                       }
@@ -504,7 +505,13 @@ export default function TripsDashboard() {
                 </div>
                 <div className="sr-only">
                   {/* keep username in URL flow */}
-                  <input readOnly name="username" value={username} />
+                  <label htmlFor="username">Username</label>
+                  <input
+                    id="username"
+                    readOnly
+                    name="username"
+                    value={username}
+                  />
                 </div>
               </form>
             </CardContent>
