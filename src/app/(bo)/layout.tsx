@@ -1,9 +1,15 @@
 import { Toaster } from "sonner";
 import { SidebarProvider } from "@/components/ui/sidebar";
-import "../globals.css"
+import "../globals.css";
 import AppSidebar from "./components/AppSideBar";
 import AppNavBar from "./components/AppNavBar";
 import { cookies } from "next/headers";
+
+export const metadata = {
+  title: "Travel Buddy - Your Trip Planner",
+  description:
+    "Plan, organize, and enjoy your trips with Travel Buddy. Your all-in-one travel planning companion.",
+};
 
 export default async function RootLayout({
   children,
