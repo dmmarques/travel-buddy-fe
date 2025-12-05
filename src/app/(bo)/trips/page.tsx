@@ -261,6 +261,7 @@ export default function TripsDashboard() {
                       )
                     }
                     placeholder=""
+                    aria-label="Filter trips by date range"
                   />
                   {(filterDateRange.from || filterDateRange.to) && (
                     <Button
@@ -275,6 +276,7 @@ export default function TripsDashboard() {
                       className="ml-1"
                     >
                       <span aria-hidden="true">×</span>
+                      <span className="sr-only">Clear date filter</span>
                     </Button>
                   )}
                 </div>
