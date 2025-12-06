@@ -27,6 +27,7 @@ import { getAIEstimatedTravelCost } from "@/app/utilies/api/aiService";
 import { InfoIcon, ReceiptEuro } from "lucide-react";
 import { LuFuel } from "react-icons/lu";
 import { FaRoad } from "react-icons/fa";
+import { Spinner } from "@/components/ui/spinner";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 const formSchema = z.object({
@@ -83,6 +84,7 @@ export default function TravelFormV2({
   const [genTravelCost, setGenTravelCost] = React.useState<
     GenTravelCost | undefined
   >(travel?.genTravelCost);
+  const [loadingCost, setLoadingCost] = React.useState(false);
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: travel
@@ -149,6 +151,7 @@ export default function TravelFormV2({
       const fromInput = form.getValues("fromInput");
       const toInput = form.getValues("toInput");
       if (fromInput && toInput) {
+        setLoadingCost(true);
         try {
           const data = (await getAIEstimatedTravelCost(
             fromInput,
@@ -159,12 +162,12 @@ export default function TravelFormV2({
         } catch {
           setGenTravelCost(undefined);
           setEstimatedCost("N/A");
+        } finally {
+          setLoadingCost(false);
         }
       }
     };
     fetchCost();
-    // Only run when fromInput or toInput changes
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [form.watch("fromInput"), form.watch("toInput"), travel]);
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
@@ -308,7 +311,6 @@ export default function TravelFormV2({
                       }}
                     />
                   </FormControl>
-                  {/* Removed read-only input showing from location, now shown in label */}
                   <FormMessage />
                 </FormItem>
               )}
@@ -435,8 +437,6 @@ export default function TravelFormV2({
                       }}
                     />
                   </FormControl>
-                  {/* Removed read-only input showing to location, now shown in label */}
-
                   <FormMessage />
                 </FormItem>
               )}
@@ -490,7 +490,11 @@ export default function TravelFormV2({
                         <div className="font-semibold mb-3 text-center">
                           Cost
                         </div>
-                        {genTravelCost ? (
+                        {loadingCost ? (
+                          <div className="flex justify-center items-center py-4">
+                            <Spinner className="size-6" />
+                          </div>
+                        ) : genTravelCost ? (
                           <div className="relative grid grid-cols-5 gap-0 text-center items-stretch">
                             {/* Top row: Fuel and Toll */}
                             <div className="col-span-2 flex flex-col items-center justify-center">
@@ -532,7 +536,13 @@ export default function TravelFormV2({
                     </Popover>
                   </span>
                   <span className="font-medium text-sm">
-                    {estimatedCost ? `${estimatedCost} €` : "--"}
+                    {loadingCost ? (
+                      <Spinner className="size-4" />
+                    ) : estimatedCost && estimatedCost !== "N/A" ? (
+                      `${estimatedCost} €`
+                    ) : (
+                      "--"
+                    )}
                   </span>
                 </div>
               </div>

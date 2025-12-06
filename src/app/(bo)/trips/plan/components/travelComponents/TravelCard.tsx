@@ -26,7 +26,6 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
-// Removed Dialog import; using custom overlay instead
 
 interface TravelCardProps {
   onAddTravel?: (travel: Travel) => void;
