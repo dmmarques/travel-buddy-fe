@@ -10,9 +10,7 @@ export default function LoginPage() {
           href="#"
           className="flex items-center gap-2 self-center font-medium"
           aria-label="Go to TravelBuddy Home"
-        >
-          TravelBuddy Home
-        </a>
+        ></a>
         <LoginForm />
       </div>
     </div>
