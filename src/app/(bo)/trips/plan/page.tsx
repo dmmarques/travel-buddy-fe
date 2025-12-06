@@ -159,8 +159,10 @@ export default function TripPlanPage() {
       {activeTab === "aiTab" && trip && (
         <AiTab
           accommodations={trip.accommodations || []}
+          travelList={trip.travelList || []}
           activities={activities}
           setActivities={setActivities}
+          trip={trip}
         />
       )}
       {activeTab === "accommodation" && trip && (

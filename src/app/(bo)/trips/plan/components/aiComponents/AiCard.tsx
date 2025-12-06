@@ -3,16 +3,19 @@ import { toast } from "sonner";
 import { addActivityToTrip } from "@/app/utilies/api/activities";
 import type { Accommodation } from "../AiTab";
 import type { GenActivity } from "@/app/(bo)/trips/types/GenActivity";
-import {} from "@/components/ui/carousel"; // Carousel imports removed
+import {} from "@/components/ui/carousel";
 import { Button } from "@/components/ui/button";
 import { getAISuggestions } from "@/app/utilies/api/aiService";
+import { Trip } from "../../../types/trip";
 
 interface AiCardProps {
   accommodations: Accommodation[];
+  travelList: import("@/app/(bo)/trips/types/travel").Travel[];
   activities: import("@/app/(bo)/trips/types/activity").Activity[];
   setActivities: React.Dispatch<
     React.SetStateAction<import("@/app/(bo)/trips/types/activity").Activity[]>
   >;
+  trip?: Trip;
 }
 
 function getNumberOfDays(checkIn: string, checkOut: string) {
@@ -24,8 +27,10 @@ function getNumberOfDays(checkIn: string, checkOut: string) {
 
 export default function AiCard({
   accommodations,
+  travelList,
   activities,
   setActivities,
+  trip,
 }: AiCardProps) {
   // State for loading and results per city-country key
   const [loading, setLoading] = useState<{ [key: string]: boolean }>({});
@@ -33,29 +38,66 @@ export default function AiCard({
     [key: string]: { error?: string; data?: GenActivity[] };
   }>({});
 
-  if (accommodations.length === 0) {
-    return <div className="text-gray-500">No accommodations found.</div>;
+  if (accommodations.length === 0 && travelList.length === 0) {
+    return (
+      <div className="text-gray-500">No travel or accommodations found.</div>
+    );
   }
 
-  // Group accommodations by city, extracting city from address (Street, City, Country)
+  // Only use travels for recommendations if available, otherwise use accommodations
   const cityCountryGroups: {
-    [key: string]: { city: string; country: string; accs: Accommodation[] };
+    [key: string]: {
+      city: string;
+      country: string;
+      accs: Accommodation[];
+      travels: import("@/app/(bo)/trips/types/travel").Travel[];
+    };
   } = {};
-  accommodations.forEach((acc) => {
-    let city = "Unknown City";
-    let country = "Unknown Country";
-    if (acc.address) {
-      const parts = acc.address.split(",").map((s) => s.trim());
-      if (parts.length >= 2) {
-        city = parts[parts.length - 2];
-        country = parts[parts.length - 1];
+
+  if (travelList.length > 0) {
+    travelList.forEach((travel) => {
+      let city = "Unknown City";
+      let country = "Unknown Country";
+      // If travel.name is in format 'Origin - Destination', use Destination
+      if (travel.name) {
+        const parts = travel.name.split("-");
+        if (parts.length === 2) {
+          // Destination part
+          const dest = parts[1].trim();
+          // Try to split city and country by last comma
+          const destParts = dest.split(",");
+          if (destParts.length >= 2) {
+            city = destParts.slice(0, -1).join(",").trim();
+            country = destParts[destParts.length - 1].trim();
+          } else {
+            city = dest;
+          }
+        } else {
+          city = travel.name;
+        }
       }
-    }
-    const key = `${city},${country}`;
-    if (!cityCountryGroups[key])
-      cityCountryGroups[key] = { city, country, accs: [] };
-    cityCountryGroups[key].accs.push(acc);
-  });
+      const key = `${city},${country}`;
+      if (!cityCountryGroups[key])
+        cityCountryGroups[key] = { city, country, accs: [], travels: [] };
+      cityCountryGroups[key].travels.push(travel);
+    });
+  } else {
+    accommodations.forEach((acc) => {
+      let city = "Unknown City";
+      let country = "Unknown Country";
+      if (acc.address) {
+        const parts = acc.address.split(",").map((s) => s.trim());
+        if (parts.length >= 2) {
+          city = parts[parts.length - 2];
+          country = parts[parts.length - 1];
+        }
+      }
+      const key = `${city},${country}`;
+      if (!cityCountryGroups[key])
+        cityCountryGroups[key] = { city, country, accs: [], travels: [] };
+      cityCountryGroups[key].accs.push(acc);
+    });
+  }
 
   const handleGetSuggestions = async (
     key: string,
@@ -87,12 +129,23 @@ export default function AiCard({
       {Object.entries(cityCountryGroups).map(
         ([key, { city, country, accs }]) => {
           // Calculate total days for this city
-          const totalDays = accs.reduce((sum, acc) => {
+          let totalDays = accs.reduce((sum, acc) => {
             if (acc.checkInDate && acc.checkOutDate) {
               return sum + getNumberOfDays(acc.checkInDate, acc.checkOutDate);
             }
             return sum;
           }, 0);
+          // If no accommodations, use trip duration
+          if (totalDays === 0 && trip && trip.startDate && trip.endDate) {
+            const start = new Date(trip.startDate);
+            const end = new Date(trip.endDate);
+            totalDays = Math.max(
+              1,
+              Math.ceil(
+                (end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24)
+              ) + 1
+            );
+          }
           return (
             <div
               key={key}
