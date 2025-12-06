@@ -263,27 +263,54 @@ export default function OverviewCard({
                     onValueChange={(val) => field.onChange(val)}
                     className="gap-2"
                   >
-                    <ToggleGroupItem
-                      value="sightseeing"
-                      aria-label="Sightseeing"
-                    >
-                      <Binoculars className="h-6 w-6" />
-                    </ToggleGroupItem>
-                    <ToggleGroupItem value="food" aria-label="Food">
-                      <Utensils className="h-6 w-6" />
-                    </ToggleGroupItem>
-                    <ToggleGroupItem value="sport" aria-label="Sport">
-                      <Volleyball className="h-6 w-6" />
-                    </ToggleGroupItem>
-                    <ToggleGroupItem
-                      value="entertainment"
-                      aria-label="Entertainment"
-                    >
-                      <FerrisWheel className="h-6 w-6" />
-                    </ToggleGroupItem>
-                    <ToggleGroupItem value="other" aria-label="Other">
-                      <HelpCircle className="h-6 w-6" />
-                    </ToggleGroupItem>
+                    <div className="relative group">
+                      <ToggleGroupItem
+                        value="sightseeing"
+                        aria-label="Sightseeing"
+                        className="data-[state=on]:bg-[var(--chart-4)] data-[state=on]:text-white"
+                      >
+                        <Binoculars className="h-6 w-6" />
+                      </ToggleGroupItem>
+                      <span className="absolute left-0 translate-x-0 bottom-full mb-2 px-2 py-1 rounded bg-black text-white text-xs opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity whitespace-nowrap z-30">
+                        Sightseeing
+                      </span>
+                    </div>
+                    <div className="relative group">
+                      <ToggleGroupItem
+                        value="food"
+                        aria-label="Food"
+                        className="data-[state=on]:bg-[var(--chart-2)] data-[state=on]:text-white"
+                      >
+                        <Utensils className="h-6 w-6" />
+                      </ToggleGroupItem>
+                      <span className="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 px-2 py-1 rounded bg-black text-white text-xs opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity whitespace-nowrap z-30">
+                        Food
+                      </span>
+                    </div>
+                    <div className="relative group">
+                      <ToggleGroupItem
+                        value="sport"
+                        aria-label="Sport"
+                        className="data-[state=on]:bg-[var(--chart-3)] data-[state=on]:text-white"
+                      >
+                        <Volleyball className="h-6 w-6" />
+                      </ToggleGroupItem>
+                      <span className="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 px-2 py-1 rounded bg-black text-white text-xs opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity whitespace-nowrap z-30">
+                        Sport
+                      </span>
+                    </div>
+                    <div className="relative group">
+                      <ToggleGroupItem
+                        value="entertainment"
+                        aria-label="Entertainment"
+                        className="data-[state=on]:bg-[var(--chart-5)] data-[state=on]:text-black"
+                      >
+                        <FerrisWheel className="h-6 w-6" />
+                      </ToggleGroupItem>
+                      <span className="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 px-2 py-1 rounded bg-black text-white text-xs opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity whitespace-nowrap z-30">
+                        Entertainment
+                      </span>
+                    </div>
                   </ToggleGroup>
                 </FormControl>
                 <FormMessage />

@@ -1,12 +1,9 @@
-// ChadCN Table columns for Itinerary Activities
 import { ColumnDef } from "@tanstack/react-table";
 import type { Activity } from "@/app/(bo)/trips/types/activity";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
