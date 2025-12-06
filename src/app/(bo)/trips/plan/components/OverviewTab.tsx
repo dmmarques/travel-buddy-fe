@@ -16,6 +16,7 @@ interface OverviewTabProps {
   onTripUpdate?: (trip: Trip) => void;
   onGoToItineraryTab?: (day: Date) => void;
   onGoToBudgetTab?: () => void;
+  setActiveTab?: (tab: string) => void;
 }
 
 export default function OverviewTab({
@@ -24,13 +25,22 @@ export default function OverviewTab({
   onTripUpdate,
   onGoToItineraryTab,
   onGoToBudgetTab,
+  setActiveTab,
 }: OverviewTabProps) {
-  // Remove local currentTrip state, use trip prop directly
+  // Fallback local tab state if setActiveTab is not provided
+  const [localTab, setLocalTab] = React.useState<string>("");
+  const handleSetTab = (tab: string) => {
+    if (setActiveTab) {
+      setActiveTab(tab);
+    } else {
+      setLocalTab(tab);
+    }
+  };
   return (
     <div className="flex flex-1">
       {/* Left column */}
       <div className="flex-1 min-w-0 flex flex-col p-8">
-        <OverviewCard trip={trip} onTripUpdate={onTripUpdate} />
+        <OverviewCard trip={trip} onTripUpdate={onTripUpdate} setActiveTab={handleSetTab} />
         <ItineraryCard
           trip={trip}
           activities={activities}

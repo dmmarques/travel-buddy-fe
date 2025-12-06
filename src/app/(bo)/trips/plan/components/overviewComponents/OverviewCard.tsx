@@ -30,7 +30,6 @@ import {
   Volleyball,
   Binoculars,
   FerrisWheel,
-  HelpCircle,
 } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Trip } from "@/app/(bo)/trips/types/trip";
@@ -135,188 +134,219 @@ export default function OverviewCard({
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="space-y-4 max-w-2xl w-full mx-auto py-2 flex-1 overflow-auto relative"
+          className="max-w-2xl w-full mx-auto py-2 flex-1 overflow-auto relative"
           style={{ maxHeight: "100%", minHeight: 0 }}
         >
-          <FormField
-            control={form.control}
-            name="tripName"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Name</FormLabel>
-                <FormControl>
-                  <Input
-                    placeholder="Trip Name"
-                    type="text"
-                    {...field}
-                    className="w-40"
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="budget"
-            render={({ field }) => (
-              <FormItem>
-                <div className="flex items-center gap-2">
-                  <FormLabel className="m-0">Budget</FormLabel>
-                </div>
-                <FormControl>
-                  <Input
-                    placeholder="Budget"
-                    type="number"
-                    min={0}
-                    step={0.01}
-                    {...field}
-                    value={field.value ?? ""}
-                    className="w-32"
-                    onChange={(e) => {
-                      const val = e.target.value;
-                      field.onChange(val === "" ? undefined : Number(val));
-                    }}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="date"
-            render={({ field }) => (
-              <FormItem className="flex flex-col">
-                <div className="flex items-center gap-2">
-                  <FormLabel className="m-0">Dates</FormLabel>
-                  <span className="text-[10px] text-muted-foreground">
-                    YYYY-MM-DD
-                  </span>
-                </div>
-                <Popover>
-                  <PopoverTrigger asChild>
+          <div className="flex flex-row gap-8 w-full">
+            {/* Left column: tripName, budget, date */}
+            <div className="flex flex-col gap-4 basis-1/2 min-w-0">
+              <FormField
+                control={form.control}
+                name="tripName"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Name</FormLabel>
                     <FormControl>
-                      <Button
-                        variant={"outline"}
-                        className={cn(
-                          "w-[240px] pl-3 text-left font-normal",
-                          !field.value?.from && "text-muted-foreground"
-                        )}
-                      >
-                        {field.value?.from || field.value?.to ? (
-                          field.value.from && field.value.to ? (
-                            `${format(
-                              field.value.from,
-                              "yyyy-MM-dd"
-                            )} - ${format(field.value.to, "yyyy-MM-dd")}`
-                          ) : field.value.from ? (
-                            format(field.value.from, "yyyy-MM-dd")
-                          ) : field.value.to ? (
-                            format(field.value.to, "yyyy-MM-dd")
-                          ) : null
-                        ) : (
-                          <span>Year - Month - Day</span>
-                        )}
-                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                      </Button>
+                      <Input
+                        placeholder="Trip Name"
+                        type="text"
+                        {...field}
+                        className="w-40"
+                      />
                     </FormControl>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0" align="start">
-                    <Calendar
-                      mode="range"
-                      selected={
-                        field.value as {
-                          from: Date | undefined;
-                          to: Date | undefined;
-                        }
-                      }
-                      onSelect={field.onChange}
-                      initialFocus
-                      month={
-                        (field.value?.from as Date | undefined) ||
-                        (field.value?.to as Date | undefined) ||
-                        (trip.startDate ? new Date(trip.startDate) : undefined)
-                      }
-                    />
-                  </PopoverContent>
-                </Popover>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-          <FormField
-            control={form.control}
-            name="preferences"
-            render={({ field }) => (
-              <FormItem>
-                <div className="flex items-center gap-2">
-                  <FormLabel className="m-0">Preferences</FormLabel>
+              <FormField
+                control={form.control}
+                name="budget"
+                render={({ field }) => (
+                  <FormItem>
+                    <div className="flex items-center gap-2">
+                      <FormLabel className="m-0">Budget</FormLabel>
+                    </div>
+                    <FormControl>
+                      <Input
+                        placeholder="Budget"
+                        type="number"
+                        min={0}
+                        step={0.01}
+                        {...field}
+                        value={field.value ?? ""}
+                        className="w-32"
+                        onChange={(e) => {
+                          const val = e.target.value;
+                          field.onChange(val === "" ? undefined : Number(val));
+                        }}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="date"
+                render={({ field }) => (
+                  <FormItem className="flex flex-col">
+                    <div className="flex items-center gap-2">
+                      <FormLabel className="m-0">Dates</FormLabel>
+                      <span className="text-[10px] text-muted-foreground">
+                        YYYY-MM-DD
+                      </span>
+                    </div>
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <FormControl>
+                          <Button
+                            variant={"outline"}
+                            className={cn(
+                              "w-[240px] pl-3 text-left font-normal",
+                              !field.value?.from && "text-muted-foreground"
+                            )}
+                          >
+                            {field.value?.from || field.value?.to ? (
+                              field.value.from && field.value.to ? (
+                                `${format(
+                                  field.value.from,
+                                  "yyyy-MM-dd"
+                                )} - ${format(field.value.to, "yyyy-MM-dd")}`
+                              ) : field.value.from ? (
+                                format(field.value.from, "yyyy-MM-dd")
+                              ) : field.value.to ? (
+                                format(field.value.to, "yyyy-MM-dd")
+                              ) : null
+                            ) : (
+                              <span>Year - Month - Day</span>
+                            )}
+                            <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                          </Button>
+                        </FormControl>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-auto p-0" align="start">
+                        <Calendar
+                          mode="range"
+                          selected={
+                            field.value as {
+                              from: Date | undefined;
+                              to: Date | undefined;
+                            }
+                          }
+                          onSelect={field.onChange}
+                          initialFocus
+                          month={
+                            (field.value?.from as Date | undefined) ||
+                            (field.value?.to as Date | undefined) ||
+                            (trip.startDate
+                              ? new Date(trip.startDate)
+                              : undefined)
+                          }
+                        />
+                      </PopoverContent>
+                    </Popover>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+
+            {/* Vertical separator */}
+            <div
+              className="w-px bg-gray-300 mx-2"
+              style={{ minHeight: "280px", alignSelf: "stretch" }}
+            />
+
+            {/* Right column: preferences */}
+            <div className="flex flex-col gap-4 basis-1/2 min-w-0 items-start">
+              <FormField
+                control={form.control}
+                name="preferences"
+                render={({ field }) => (
+                  <FormItem>
+                    <div className="flex items-center gap-2">
+                      <FormLabel className="m-0">Preferences</FormLabel>
+                    </div>
+                    <FormControl>
+                      <ToggleGroup
+                        type="multiple"
+                        value={field.value ?? []}
+                        onValueChange={(val) => field.onChange(val)}
+                        className="gap-2 flex-wrap"
+                      >
+                        <div className="relative group">
+                          <ToggleGroupItem
+                            value="sightseeing"
+                            aria-label="Sightseeing"
+                            className="data-[state=on]:bg-[var(--chart-4)] data-[state=on]:text-white"
+                          >
+                            <Binoculars className="h-6 w-6" />
+                          </ToggleGroupItem>
+                          <span className="absolute left-0 translate-x-0 bottom-full mb-2 px-2 py-1 rounded bg-black text-white text-xs opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity whitespace-nowrap z-30">
+                            Sightseeing
+                          </span>
+                        </div>
+                        <div className="relative group">
+                          <ToggleGroupItem
+                            value="food"
+                            aria-label="Food"
+                            className="data-[state=on]:bg-[var(--chart-2)] data-[state=on]:text-white"
+                          >
+                            <Utensils className="h-6 w-6" />
+                          </ToggleGroupItem>
+                          <span className="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 px-2 py-1 rounded bg-black text-white text-xs opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity whitespace-nowrap z-30">
+                            Food
+                          </span>
+                        </div>
+                        <div className="relative group">
+                          <ToggleGroupItem
+                            value="sport"
+                            aria-label="Sport"
+                            className="data-[state=on]:bg-[var(--chart-3)] data-[state=on]:text-white"
+                          >
+                            <Volleyball className="h-6 w-6" />
+                          </ToggleGroupItem>
+                          <span className="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 px-2 py-1 rounded bg-black text-white text-xs opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity whitespace-nowrap z-30">
+                            Sport
+                          </span>
+                        </div>
+                        <div className="relative group">
+                          <ToggleGroupItem
+                            value="entertainment"
+                            aria-label="Entertainment"
+                            className="data-[state=on]:bg-[var(--chart-5)] data-[state=on]:text-black"
+                          >
+                            <FerrisWheel className="h-6 w-6" />
+                          </ToggleGroupItem>
+                          <span className="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 px-2 py-1 rounded bg-black text-white text-xs opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity whitespace-nowrap z-30">
+                            Entertainment
+                          </span>
+                        </div>
+                      </ToggleGroup>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+                {/* Totals Section */}
+                <div className="mt-6 flex flex-col justify-between gap-6 text-sm w-full" style={{ minHeight: '120px' }}>
+                  <div className="w-full flex items-center">
+                    <span className="font-semibold">Total Travels:</span>
+                    <span className="ml-2">{trip.travelList ? trip.travelList.length : 0}</span>
+                  </div>
+                  <div className="w-full flex items-center">
+                    <span className="font-semibold">Total Accommodations:</span>
+                    <span className="ml-2">{trip.accommodations ? trip.accommodations.length : 0}</span>
+                  </div>
+                  <div className="w-full flex items-center">
+                    <span className="font-semibold">Total Activities:</span>
+                    <span className="ml-2">{trip.activityList ? trip.activityList.length : 0}</span>
+                  </div>
                 </div>
-                <FormControl>
-                  <ToggleGroup
-                    type="multiple"
-                    value={field.value ?? []}
-                    onValueChange={(val) => field.onChange(val)}
-                    className="gap-2"
-                  >
-                    <div className="relative group">
-                      <ToggleGroupItem
-                        value="sightseeing"
-                        aria-label="Sightseeing"
-                        className="data-[state=on]:bg-[var(--chart-4)] data-[state=on]:text-white"
-                      >
-                        <Binoculars className="h-6 w-6" />
-                      </ToggleGroupItem>
-                      <span className="absolute left-0 translate-x-0 bottom-full mb-2 px-2 py-1 rounded bg-black text-white text-xs opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity whitespace-nowrap z-30">
-                        Sightseeing
-                      </span>
-                    </div>
-                    <div className="relative group">
-                      <ToggleGroupItem
-                        value="food"
-                        aria-label="Food"
-                        className="data-[state=on]:bg-[var(--chart-2)] data-[state=on]:text-white"
-                      >
-                        <Utensils className="h-6 w-6" />
-                      </ToggleGroupItem>
-                      <span className="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 px-2 py-1 rounded bg-black text-white text-xs opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity whitespace-nowrap z-30">
-                        Food
-                      </span>
-                    </div>
-                    <div className="relative group">
-                      <ToggleGroupItem
-                        value="sport"
-                        aria-label="Sport"
-                        className="data-[state=on]:bg-[var(--chart-3)] data-[state=on]:text-white"
-                      >
-                        <Volleyball className="h-6 w-6" />
-                      </ToggleGroupItem>
-                      <span className="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 px-2 py-1 rounded bg-black text-white text-xs opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity whitespace-nowrap z-30">
-                        Sport
-                      </span>
-                    </div>
-                    <div className="relative group">
-                      <ToggleGroupItem
-                        value="entertainment"
-                        aria-label="Entertainment"
-                        className="data-[state=on]:bg-[var(--chart-5)] data-[state=on]:text-black"
-                      >
-                        <FerrisWheel className="h-6 w-6" />
-                      </ToggleGroupItem>
-                      <span className="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 px-2 py-1 rounded bg-black text-white text-xs opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity whitespace-nowrap z-30">
-                        Entertainment
-                      </span>
-                    </div>
-                  </ToggleGroup>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+            </div>
+          </div>
 
           {/* </div><div className="flex gap-2"> */}
           <div className="flex gap-2 absolute bottom-0 right-0 p-4">
