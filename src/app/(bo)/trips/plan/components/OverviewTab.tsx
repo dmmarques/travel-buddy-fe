@@ -40,7 +40,7 @@ export default function OverviewTab({
     <div className="flex flex-1">
       {/* Left column */}
       <div className="flex-1 min-w-0 flex flex-col p-8">
-        <OverviewCard trip={trip} onTripUpdate={onTripUpdate} setActiveTab={handleSetTab} />
+        <OverviewCard trip={trip} onTripUpdate={onTripUpdate} />
         <ItineraryCard
           trip={trip}
           activities={activities}

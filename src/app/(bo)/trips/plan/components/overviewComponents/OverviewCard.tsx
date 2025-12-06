@@ -330,21 +330,30 @@ export default function OverviewCard({
                   </FormItem>
                 )}
               />
-                {/* Totals Section */}
-                <div className="mt-6 flex flex-col justify-between gap-6 text-sm w-full" style={{ minHeight: '120px' }}>
-                  <div className="w-full flex items-center">
-                    <span className="font-semibold">Total Travels:</span>
-                    <span className="ml-2">{trip.travelList ? trip.travelList.length : 0}</span>
-                  </div>
-                  <div className="w-full flex items-center">
-                    <span className="font-semibold">Total Accommodations:</span>
-                    <span className="ml-2">{trip.accommodations ? trip.accommodations.length : 0}</span>
-                  </div>
-                  <div className="w-full flex items-center">
-                    <span className="font-semibold">Total Activities:</span>
-                    <span className="ml-2">{trip.activityList ? trip.activityList.length : 0}</span>
-                  </div>
+              {/* Totals Section */}
+              <div
+                className="mt-6 flex flex-col justify-between gap-6 text-sm w-full"
+                style={{ minHeight: "120px" }}
+              >
+                <div className="w-full flex items-center">
+                  <span className="font-semibold">Total Travels:</span>
+                  <span className="ml-2">
+                    {trip.travelList ? trip.travelList.length : 0}
+                  </span>
                 </div>
+                <div className="w-full flex items-center">
+                  <span className="font-semibold">Total Accommodations:</span>
+                  <span className="ml-2">
+                    {trip.accommodations ? trip.accommodations.length : 0}
+                  </span>
+                </div>
+                <div className="w-full flex items-center">
+                  <span className="font-semibold">Total Activities:</span>
+                  <span className="ml-2">
+                    {trip.activityList ? trip.activityList.length : 0}
+                  </span>
+                </div>
+              </div>
             </div>
           </div>
 
