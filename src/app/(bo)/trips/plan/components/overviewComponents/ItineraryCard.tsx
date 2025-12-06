@@ -197,9 +197,21 @@ export default function ItineraryCard({
                             const weather = weatherByDate[dateKey];
                             if (!weather) {
                               return (
-                                <span className="text-sm text-gray-500 mt-1">
-                                  <CloudOff size={16} className="inline mr-1" />
-                                </span>
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <span className="text-sm text-center text-gray-500 mt-1 cursor-pointer">
+                                      <CloudOff
+                                        size={32}
+                                        className="inline mr-1"
+                                      />
+                                    </span>
+                                  </TooltipTrigger>
+                                  <TooltipContent>
+                                    <span>
+                                      Weather Information is not available
+                                    </span>
+                                  </TooltipContent>
+                                </Tooltip>
                               );
                             }
                             const { icon, label } = getWeatherIconAndLabel(
