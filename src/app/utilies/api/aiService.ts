@@ -15,10 +15,22 @@ export async function getAIEstimatedTravelCost(
   return res.data;
 }
 
-export async function getAISuggestions(location: string, numberOfDays: number) {
-  console.log("Fetching AI suggestions", location, numberOfDays);
+export async function getAISuggestions(
+  arrivalDate: Date,
+  location: string,
+  numberOfDays: number,
+  tripStartDate: Date,
+  preferences?: string
+) {
+  console.log(
+    "Fetching AI suggestions",
+    tripStartDate,
+    location,
+    numberOfDays,
+    preferences
+  );
   const res = await axios.get(`${BASE_URL}/travelSuggestions`, {
-    params: { location, numberOfDays },
+    params: { arrivalDate, tripStartDate, location, numberOfDays, preferences },
   });
   console.log("AI suggestions response:", res.data);
   return res.data;

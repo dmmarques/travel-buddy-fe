@@ -108,7 +108,21 @@ export default function AiCard({
     setLoading((prev) => ({ ...prev, [key]: true }));
     try {
       const location = `${city}, ${country}`;
-      const res = await getAISuggestions(location, days);
+      // Pass preferences from trip if available
+      const preferencesArr = trip?.preferences || [];
+      const preferences = Array.isArray(preferencesArr)
+        ? preferencesArr.join(",")
+        : preferencesArr;
+      const tripStartDate = trip?.startDate
+        ? new Date(trip.startDate)
+        : undefined;
+      const res = await getAISuggestions(
+        tripStartDate || new Date(),
+        location,
+        days,
+        tripStartDate || new Date(),
+        preferences
+      );
       // Assume backend returns GenActivity[]
       setResults((prev) => ({
         ...prev,
