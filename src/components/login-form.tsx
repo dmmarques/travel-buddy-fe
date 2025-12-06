@@ -45,7 +45,6 @@ export function LoginForm({
 }: React.ComponentProps<"div">) {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
-  // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -54,16 +53,19 @@ export function LoginForm({
     },
   });
 
-  // 2. Define a submit handler.
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true);
     const { success, message } = await signIn(values.email, values.password);
 
     if (success) {
-      toast.success("Logged in successfully!");
-      router.push("/home");
+      toast.success("Logged in successfully! Redirecting  ...", {
+        duration: 2000,
+      });
+      setTimeout(() => {
+        router.push("/home");
+      }, 1000);
     } else {
-      toast.error(`Login failed: ${message}`);
+      toast.error(`Login failed: ${message}`, { duration: 3000 });
     }
     setIsLoading(false);
   }

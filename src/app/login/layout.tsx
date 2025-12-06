@@ -1,4 +1,5 @@
 import "../globals.css";
+import { Toaster } from "@/components/ui/sonner";
 
 export default function LoginLayout({
   children,
@@ -14,7 +15,12 @@ export default function LoginLayout({
           content="Login to TravelBuddy to plan and manage your trips."
         />
       </head>
-      <body>{children}</body>
+      <body>
+        {children}
+        <div id="toast-root">
+          <Toaster position="top-center" />
+        </div>
+      </body>
     </html>
   );
 }

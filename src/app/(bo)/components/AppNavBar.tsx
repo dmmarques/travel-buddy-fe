@@ -18,6 +18,7 @@ import { getCurrentUser } from "../../../../server/users";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 
 import React, { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 const AppNavBar = () => {
   const router = useRouter();
@@ -37,7 +38,12 @@ const AppNavBar = () => {
 
   const handleLogout = async () => {
     await authClient.signOut();
-    router.push("/login");
+    toast.success("Logged out successfully! Redirecting now...", {
+      duration: 3000,
+    });
+    setTimeout(() => {
+      router.push("/login");
+    }, 1000);
   };
 
   return (

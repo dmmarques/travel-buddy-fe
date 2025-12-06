@@ -7,12 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import {
-  Field,
-  FieldDescription,
-  FieldGroup,
-  FieldSeparator,
-} from "@/components/ui/field";
+import { Field, FieldDescription, FieldGroup } from "@/components/ui/field";
 import {
   Form,
   FormControl,
@@ -32,7 +27,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
-import { authClient } from "../../lib/auth-client";
 
 const formSchema = z.object({
   username: z.string().min(3, "Username must be at least 3 characters"),
@@ -46,7 +40,7 @@ export function SignupForm({
 }: React.ComponentProps<"div">) {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
-  // 1. Define your form.
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -56,7 +50,6 @@ export function SignupForm({
     },
   });
 
-  // 2. Define a submit handler.
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true);
     const { success, message } = await signUp(
@@ -69,23 +62,11 @@ export function SignupForm({
       toast.success("Signed up successfully! You can now log in.");
       router.push("/login");
     } else {
-      toast.error(`Signup failed: ${message}`);
+      toast(`Signup failed: \n ${message}`, {
+        status: "error",
+      });
     }
     setIsLoading(false);
-  }
-
-  const signInWithGoogle = async () => {
-    await authClient.signIn.social({
-      provider: "google",
-      callbackURL: "http://localhost:3000/home",
-    });
-  };
-
-  function onSignUp(e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) {
-    e.preventDefault();
-    console.log("Sign up clicked");
-    const values = form.getValues();
-    signUp("d@example.com", "admin123", "dmmarques");
   }
 
   return (
