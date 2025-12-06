@@ -62,9 +62,7 @@ export function SignupForm({
       toast.success("Signed up successfully! You can now log in.");
       router.push("/login");
     } else {
-      toast(`Signup failed: \n ${message}`, {
-        status: "error",
-      });
+      toast(`Signup failed: \n ${message}`);
     }
     setIsLoading(false);
   }
