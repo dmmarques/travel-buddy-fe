@@ -16,7 +16,7 @@ import {
 } from "date-fns";
 
 import type { Activity } from "@/app/(bo)/trips/types/activity";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { getWeatherStatus, type DailyWeather } from "@/app/utilies/api/weather";
 import {
   Sun,
