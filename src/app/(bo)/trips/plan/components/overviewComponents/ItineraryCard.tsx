@@ -104,7 +104,7 @@ export default function ItineraryCard({
 
   // Weather code to icon and label mapping
   function getWeatherIconAndLabel(code: number): {
-    icon: JSX.Element;
+    icon: React.ReactElement;
     label: string;
   } {
     if (code >= 0 && code <= 0)
