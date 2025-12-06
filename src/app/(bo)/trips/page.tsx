@@ -123,9 +123,10 @@ export default function TripsDashboard() {
         name,
         startDate: from,
         endDate: to,
-        destination: "", // Add destination if needed
-        budget: 0, // Add budget if needed
+        destination: "",
+        budget: 0,
         creatorUsername: username,
+        preferences: [],
         activityList: [],
         accommodations: [],
         travelList: [],

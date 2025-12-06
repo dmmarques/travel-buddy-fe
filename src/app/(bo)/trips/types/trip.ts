@@ -13,6 +13,7 @@ export type Trip = {
   spent?: number;
   creatorUsername?: string;
   participantUsernames?: string[];
+  preferences?: string[];
   accommodations?: Accommodation[];
   activityList?: Activity[];
   travelList?: import("./travel").Travel[];
