@@ -12,6 +12,10 @@ export interface WeatherStatusResponse {
   dailyWeather: DailyWeather[];
 }
 
+const BASE_URL =
+  process.env.NEXT_PUBLIC_WEATHER_BASE_URL ||
+  "https://weather-buddy-fs-production.up.railway.app";
+
 export async function getWeatherStatus(
   latitude: number,
   longitude: number,
@@ -19,7 +23,7 @@ export async function getWeatherStatus(
 ): Promise<WeatherStatusResponse> {
   const dateParam = dates.join(",");
   const res = await fetch(
-    `http://localhost:8082/weather/check?latitude=${latitude}&longitude=${longitude}&dates=${dateParam}`
+    `${BASE_URL}/weather/check?latitude=${latitude}&longitude=${longitude}&dates=${dateParam}`
   );
   if (!res.ok) throw new Error("Failed to fetch weather");
   return res.json();
