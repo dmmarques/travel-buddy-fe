@@ -16,13 +16,22 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { format } from "date-fns";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
-import { Calendar as CalendarIcon, CheckCircle2 } from "lucide-react";
+import {
+  Calendar as CalendarIcon,
+  CheckCircle2,
+  Utensils,
+  Volleyball,
+  Binoculars,
+  FerrisWheel,
+  HelpCircle,
+} from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Trip } from "@/app/(bo)/trips/types/trip";
 import { updateTrip } from "@/app/utilies/api/activities";
@@ -42,6 +51,7 @@ const formSchema = z.object({
     .number()
     .min(0, { message: "Budget must be at least 0" })
     .optional(),
+  preferences: z.array(z.string()).optional(),
 });
 
 export default function OverviewCard({
@@ -58,12 +68,13 @@ export default function OverviewCard({
         to: trip.endDate ? new Date(trip.endDate) : undefined,
       },
       budget: typeof trip.budget === "number" ? trip.budget : undefined,
+      preferences: Array.isArray(trip.preferences) ? trip.preferences : [],
     },
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
-      const payload: Partial<Trip> = {
+      const payload: Partial<Trip> & { preferenceList?: string[] } = {
         name: values.tripName,
         startDate: values.date.from
           ? format(values.date.from, "yyyy-MM-dd")
@@ -72,6 +83,7 @@ export default function OverviewCard({
           ? format(values.date.to, "yyyy-MM-dd")
           : undefined,
         budget: typeof values.budget === "number" ? values.budget : undefined,
+        preferenceList: values.preferences,
       };
       console.log("Submitting form with values:", payload);
       await updateTrip(trip.id ?? trip.tripId!, payload);
@@ -83,6 +95,7 @@ export default function OverviewCard({
         tripName: values.tripName,
         date: values.date,
         budget: values.budget,
+        preferences: values.preferences,
       });
       // Call onTripUpdate if provided
       if (typeof onTripUpdate === "function") {
@@ -96,6 +109,7 @@ export default function OverviewCard({
             ? format(values.date.to, "yyyy-MM-dd")
             : undefined,
           budget: typeof values.budget === "number" ? values.budget : undefined,
+          preferences: values.preferences,
         });
       }
     } catch (error) {
@@ -150,9 +164,6 @@ export default function OverviewCard({
               <FormItem>
                 <div className="flex items-center gap-2">
                   <FormLabel className="m-0">Budget</FormLabel>
-                  <span className="text-[10px] text-muted-foreground">
-                    Per person
-                  </span>
                 </div>
                 <FormControl>
                   <Input
@@ -232,6 +243,49 @@ export default function OverviewCard({
                     />
                   </PopoverContent>
                 </Popover>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="preferences"
+            render={({ field }) => (
+              <FormItem>
+                <div className="flex items-center gap-2">
+                  <FormLabel className="m-0">Preferences</FormLabel>
+                </div>
+                <FormControl>
+                  <ToggleGroup
+                    type="multiple"
+                    value={field.value ?? []}
+                    onValueChange={(val) => field.onChange(val)}
+                    className="gap-2"
+                  >
+                    <ToggleGroupItem
+                      value="sightseeing"
+                      aria-label="Sightseeing"
+                    >
+                      <Binoculars className="h-6 w-6" />
+                    </ToggleGroupItem>
+                    <ToggleGroupItem value="food" aria-label="Food">
+                      <Utensils className="h-6 w-6" />
+                    </ToggleGroupItem>
+                    <ToggleGroupItem value="sport" aria-label="Sport">
+                      <Volleyball className="h-6 w-6" />
+                    </ToggleGroupItem>
+                    <ToggleGroupItem
+                      value="entertainment"
+                      aria-label="Entertainment"
+                    >
+                      <FerrisWheel className="h-6 w-6" />
+                    </ToggleGroupItem>
+                    <ToggleGroupItem value="other" aria-label="Other">
+                      <HelpCircle className="h-6 w-6" />
+                    </ToggleGroupItem>
+                  </ToggleGroup>
+                </FormControl>
                 <FormMessage />
               </FormItem>
             )}
