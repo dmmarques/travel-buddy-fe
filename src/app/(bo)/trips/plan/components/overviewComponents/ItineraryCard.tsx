@@ -70,8 +70,8 @@ export default function ItineraryCard({
       ? trip.travelList[0]
       : null;
   console.log("Destination:", destination);
-  const latitude = destination?.toLat;
-  const longitude = destination?.toLng;
+  const latitude = destination?.toLat ? Number(destination.toLat) : undefined;
+  const longitude = destination?.toLng ? Number(destination.toLng) : undefined;
 
   // Fetch weather for all days
   useEffect(() => {
