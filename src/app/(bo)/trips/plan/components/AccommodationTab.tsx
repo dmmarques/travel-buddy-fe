@@ -9,11 +9,13 @@ import { Trip } from "@/app/(bo)/trips/types/trip";
 interface AccommodationTabProps {
   trip: Trip;
   onAccommodationAdded?: (accommodation: Accommodation) => void;
+  destinationCoords?: { lat: number; lng: number };
 }
 
 export default function AccommodationTab({
   trip,
   onAccommodationAdded,
+  destinationCoords,
 }: AccommodationTabProps) {
   // Track the currently picked accommodation (for preview on map)
   const [pickedAccommodation, setPickedAccommodation] =
@@ -61,6 +63,7 @@ export default function AccommodationTab({
           trip={trip}
           onAccommodationAdded={handleAccommodationAdded}
           onAccommodationPicking={setPickedAccommodation}
+          destinationCoords={destinationCoords}
         />
       </div>
       <div className="flex-1 bg-white rounded-2xl shadow-md flex flex-col justify-between h-7/8">

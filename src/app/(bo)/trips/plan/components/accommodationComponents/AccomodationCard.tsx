@@ -19,12 +19,14 @@ interface AccommodationCardProps {
   trip: Trip;
   onAccommodationAdded?: (accommodation: Accommodation) => void;
   onAccommodationPicking?: (accommodation: Accommodation | null) => void;
+  destinationCoords?: { lat: number; lng: number };
 }
 
 export default function AccommodationCard({
   trip,
   onAccommodationAdded,
   onAccommodationPicking,
+  destinationCoords,
 }: AccommodationCardProps) {
   const [showPredictions, setShowPredictions] = useState(false);
 
@@ -166,7 +168,7 @@ export default function AccommodationCard({
       {/* Show predictions picker */}
       {showPredictions && !selectedAccommodation && (
         <div className="flex flex-col items-center justify-center z-20 bg-white/90">
-          <Predictions onPick={handlePickPlace} />
+          <Predictions onPick={handlePickPlace} destinationCoords={destinationCoords} />
           <Button
             variant="outline"
             onClick={() => handleShowPredictions(false)}

@@ -169,6 +169,14 @@ export default function TripPlanPage() {
         <AccommodationTab
           trip={trip}
           onAccommodationAdded={handleAccommodationAdded}
+          destinationCoords={
+            trip.travelList && trip.travelList.length > 0
+              ? {
+                  lat: parseFloat(trip.travelList[0].toLat ?? "0"),
+                  lng: parseFloat(trip.travelList[0].toLng ?? "0"),
+                }
+              : undefined
+          }
         />
       )}
       {activeTab === "itinerary" && trip && (

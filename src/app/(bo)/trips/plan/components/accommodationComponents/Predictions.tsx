@@ -1,4 +1,5 @@
 import { autoComplete, getPlaceDetails } from "@/app/utilies/api/google";
+import { toast } from "sonner";
 import {
   Command,
   CommandGroup,
@@ -7,6 +8,7 @@ import {
   CommandList,
 } from "@/components/ui/command";
 import { PlaceAutocompleteResult } from "@googlemaps/google-maps-services-js/dist/places/autocomplete";
+import { Place } from "@googlemaps/google-maps-services-js/dist/common";
 import { useEffect, useState } from "react";
 
 type PlacePrediction = PlaceAutocompleteResult & {
@@ -22,11 +24,17 @@ type PlacePrediction = PlaceAutocompleteResult & {
 
 type PredictionsProps = {
   onPick?: (place: PlacePrediction) => void;
+  destinationCoords?: { lat: number; lng: number };
 };
 
-export default function Predictions({ onPick }: PredictionsProps) {
+export default function Predictions({
+  onPick,
+  destinationCoords,
+}: PredictionsProps) {
   const [predictions, setPredictions] = useState<PlaceAutocompleteResult[]>([]);
   const [input, setInput] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const [debug, setDebug] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchPredictions = async () => {
@@ -54,16 +62,68 @@ export default function Predictions({ onPick }: PredictionsProps) {
                     <CommandItem
                       key={prediction.place_id}
                       onSelect={async () => {
-                        if (onPick) {
-                          let details = {};
-                          if (prediction.place_id) {
-                            try {
-                              details = await getPlaceDetails(
-                                prediction.place_id
-                              );
-                            } catch {}
+                        setError(null);
+                        setDebug(null);
+                        let details: Place = {};
+                        if (prediction.place_id) {
+                          try {
+                            details = await getPlaceDetails(
+                              prediction.place_id
+                            );
+                          } catch {}
+                        }
+                        const picked = { ...prediction, ...details };
+                        // Debug: show coordinates used
+                        let debugMsg = "";
+                        const accLocation = details.geometry?.location;
+                        if (accLocation) {
+                          debugMsg += `Accommodation: lat=${accLocation.lat}, lng=${accLocation.lng}\n`;
+                        } else {
+                          debugMsg += "Accommodation coordinates missing.\n";
+                        }
+                        if (destinationCoords) {
+                          debugMsg += `Destination: lat=${destinationCoords.lat}, lng=${destinationCoords.lng}`;
+                        } else {
+                          debugMsg += "Destination coordinates missing.";
+                        }
+                        setDebug(debugMsg);
+                        // If destinationCoords is provided, check distance
+                        if (accLocation && destinationCoords) {
+                          const toLat = destinationCoords.lat;
+                          const toLng = destinationCoords.lng;
+                          if (isNaN(toLat) || isNaN(toLng)) {
+                            setError(
+                              "Destination coordinates are invalid. Please check your trip setup."
+                            );
+                            return;
                           }
-                          onPick({ ...prediction, ...details });
+                          const toRad = (v: number) => (v * Math.PI) / 180;
+                          const R = 6371; // Earth radius in km
+                          const dLat = toRad(accLocation.lat - toLat);
+                          const dLng = toRad(accLocation.lng - toLng);
+                          const a =
+                            Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                            Math.cos(toRad(toLat)) *
+                              Math.cos(toRad(accLocation.lat)) *
+                              Math.sin(dLng / 2) *
+                              Math.sin(dLng / 2);
+                          const c =
+                            2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+                          const distance = R * c;
+                          debugMsg += `\nDistance: ${distance.toFixed(2)} km`;
+                          setDebug(debugMsg);
+                          if (distance > 50) {
+                            toast.error(
+                              "Selected accommodation is too far from your destination (over 50km). Please pick a closer place."
+                            );
+                            setError(
+                              "Selected accommodation is too far from your destination (over 50km). Please pick a closer place."
+                            );
+                            return;
+                          }
+                        }
+                        if (onPick) {
+                          onPick(picked);
                         }
                         // Close predictions by clearing input and predictions
                         setInput("");
@@ -81,6 +141,14 @@ export default function Predictions({ onPick }: PredictionsProps) {
                   ))}
                 </CommandGroup>
               </CommandList>
+            </div>
+          )}
+          {error && (
+            <div className="text-red-600 text-center mt-2">{error}</div>
+          )}
+          {debug && (
+            <div className="text-xs text-gray-500 text-center mt-2 whitespace-pre">
+              {debug}
             </div>
           )}
         </div>
