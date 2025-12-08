@@ -14,6 +14,7 @@ import { Input } from "@/components/ui/input";
 import { Accommodation } from "@/app/(bo)/trips/types/accommodation";
 
 import { CheckCircle2 } from "lucide-react";
+import { SquareCheckBig, SquareX } from "lucide-react";
 
 export interface AccommodationFormProps {
   accommodation: Accommodation | null;
@@ -174,20 +175,30 @@ export function AccommodationForm(props: AccommodationFormProps) {
             />
             <FormField
               control={form.control}
-              name="internationalPhoneNumber"
+              name="isAccessible"
               render={({ field }) => (
                 <FormItem className="flex-1 flex flex-col justify-center">
                   <FormLabel className="w-full flex justify-center items-center text-center mb-2">
                     Accessibility
                   </FormLabel>
                   <FormControl>
-                    <Input
-                      className="w-full md:w-[95%]"
-                      placeholder="Accommodation accessibility"
-                      type="text"
-                      readOnly
-                      {...field}
-                    />
+                    <div className="w-full md:w-[95%] flex items-center justify-center gap-2 py-2">
+                      {field.value ? (
+                        <>
+                          <SquareCheckBig className="text-green-600 w-6 h-6" />
+                          <span className="text-green-700 font-medium">
+                            Accessible
+                          </span>
+                        </>
+                      ) : (
+                        <>
+                          <SquareX className="text-red-600 w-6 h-6" />
+                          <span className="text-red-700 font-medium">
+                            Not Accessible
+                          </span>
+                        </>
+                      )}
+                    </div>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -337,56 +348,6 @@ export function AccommodationForm(props: AccommodationFormProps) {
                   </FormItem>
                 )}
               />
-              <FormField
-                control={form.control}
-                name="allowsPets"
-                render={({ field }) => (
-                  <FormItem className="flex flex-1 items-center gap-3">
-                    <FormLabel className="whitespace-nowrap w-40 text-right">
-                      Pet Friendly
-                    </FormLabel>
-                    <FormControl>
-                      <input
-                        type="checkbox"
-                        checked={!!field.value}
-                        onChange={(e) => field.onChange(e.target.checked)}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="priceForPet"
-                render={({ field }) => {
-                  const allowsPets = form.watch("allowsPets");
-                  return (
-                    <FormItem className="flex flex-1 items-center gap-3">
-                      <FormLabel className="whitespace-nowrap w-40 text-right">
-                        Price per Night (Dog)
-                      </FormLabel>
-                      <FormControl>
-                        <Input
-                          className={`w-[75px] ${
-                            !allowsPets
-                              ? "bg-gray-100 cursor-not-allowed opacity-60"
-                              : ""
-                          }`}
-                          placeholder="20"
-                          type="number"
-                          min="0"
-                          readOnly={!allowsPets}
-                          disabled={!allowsPets}
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  );
-                }}
-              />
-
               {/* Save Button at the end, divides space equally */}
               <div className="flex-1 flex items-end justify-center">
                 <Button

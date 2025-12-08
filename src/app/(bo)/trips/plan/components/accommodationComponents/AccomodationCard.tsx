@@ -168,7 +168,10 @@ export default function AccommodationCard({
       {/* Show predictions picker */}
       {showPredictions && !selectedAccommodation && (
         <div className="flex flex-col items-center justify-center z-20 bg-white/90">
-          <Predictions onPick={handlePickPlace} destinationCoords={destinationCoords} />
+          <Predictions
+            onPick={handlePickPlace}
+            destinationCoords={destinationCoords}
+          />
           <Button
             variant="outline"
             onClick={() => handleShowPredictions(false)}
