@@ -38,6 +38,35 @@ export default function AiCard({
     [key: string]: { error?: string; data?: GenActivity[] };
   }>({});
 
+  // Preferences state (selectable buttons)
+  const preferenceOptions = ["Sightseeing", "Food", "Sport", "Entertainment"];
+  // Color mapping for preferences using OverviewCard's CSS variables
+  const preferenceColors: Record<string, string> = {
+    Sightseeing:
+      "data-[selected=true]:bg-[var(--chart-4)] data-[selected=true]:text-white",
+    Food: "data-[selected=true]:bg-[var(--chart-2)] data-[selected=true]:text-white",
+    Sport:
+      "data-[selected=true]:bg-[var(--chart-3)] data-[selected=true]:text-white",
+    Entertainment:
+      "data-[selected=true]:bg-[var(--chart-5)] data-[selected=true]:text-black",
+  };
+  // Normalize trip preferences to match options (case-insensitive)
+  const initialPreferences = (trip?.preferences || []).map((p: string) => {
+    const match = preferenceOptions.find(
+      (opt) => opt.toLowerCase() === p.toLowerCase()
+    );
+    return match || p;
+  });
+  const [selectedPreferences, setSelectedPreferences] =
+    useState<string[]>(initialPreferences);
+
+  // Update selected preferences on click
+  const togglePreference = (pref: string) => {
+    setSelectedPreferences((prev) =>
+      prev.includes(pref) ? prev.filter((p) => p !== pref) : [...prev, pref]
+    );
+  };
+
   if (accommodations.length === 0 && travelList.length === 0) {
     return (
       <div className="text-gray-500">No travel or accommodations found.</div>
@@ -108,11 +137,8 @@ export default function AiCard({
     setLoading((prev) => ({ ...prev, [key]: true }));
     try {
       const location = `${city}, ${country}`;
-      // Pass preferences from trip if available
-      const preferencesArr = trip?.preferences || [];
-      const preferences = Array.isArray(preferencesArr)
-        ? preferencesArr.join(",")
-        : preferencesArr;
+      // Use selected preferences from UI
+      const preferences = selectedPreferences.join(",");
       const tripStartDate = trip?.startDate
         ? new Date(trip.startDate)
         : undefined;
@@ -181,6 +207,32 @@ export default function AiCard({
               <div className="text-gray-800 mb-4">
                 Total days: <span className="font-semibold">{totalDays}</span>
               </div>
+              {/* Preferences selection buttons (selectable, with trip info) */}
+              <div className="mb-4 flex flex-wrap gap-2 w-full justify-center">
+                {preferenceOptions.map((pref) => {
+                  const selected = selectedPreferences.includes(pref);
+                  // Use OverviewCard's color logic: data attribute for selected state
+                  const colorClass = preferenceColors[pref] || "";
+                  return (
+                    <Button
+                      key={pref}
+                      variant="outline"
+                      size="sm"
+                      onClick={() => togglePreference(pref)}
+                      aria-pressed={selected}
+                      data-selected={selected}
+                      className={
+                        colorClass +
+                        (selected
+                          ? " border font-semibold shadow-sm"
+                          : " border opacity-70")
+                      }
+                    >
+                      {pref}
+                    </Button>
+                  );
+                })}
+              </div>
               {results[key] && (
                 <div
                   className="mt-2 text-sm text-black bg-gray-50 rounded p-2"
@@ -208,8 +260,6 @@ export default function AiCard({
                           food: "food",
                           sport: "sport",
                           entertainment: "entertainment",
-                          other: "other",
-                          // Add more mappings if needed
                         };
                         // Normalize and map category
                         let mappedCategory = "other";
