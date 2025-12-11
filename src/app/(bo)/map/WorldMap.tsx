@@ -1,16 +1,15 @@
 "use client";
 
+import type { Travel } from "@/app/(bo)/trips/types/travel";
 import { APIProvider, Map, Marker } from "@vis.gl/react-google-maps";
 
-import type { Accommodation } from "@/app/(bo)/trips/types/accommodation";
-
 type WorldMapProps = {
-  accommodations: Accommodation[];
+  travelList: Travel[];
 };
 
 import { useState } from "react";
 
-export default function WorldMap({ accommodations }: WorldMapProps) {
+export default function WorldMap({ travelList }: WorldMapProps) {
   const defaultCenter = { lat: 54.526, lng: 15.2551 };
   const defaultZoom = 4;
 
@@ -84,14 +83,14 @@ export default function WorldMap({ accommodations }: WorldMapProps) {
           defaultCenter={defaultCenter}
           style={{ width: "100%", height: "100%" }}
         >
-          {accommodations.map((a) => (
+          {travelList.map((t) => (
             <Marker
-              key={a.id || a.name}
+              key={t.id || t.name}
               position={{
-                lat: parseFloat(a.latitude),
-                lng: parseFloat(a.longitude),
+                lat: parseFloat(t.toLat),
+                lng: parseFloat(t.toLng),
               }}
-              title={a.name}
+              title={t.name}
             />
           ))}
         </Map>

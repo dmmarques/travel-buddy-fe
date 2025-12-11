@@ -4,34 +4,34 @@ import { useEffect, useState, useCallback } from "react";
 import WorldMap from "./WorldMap";
 import { listTripsByUsername } from "@/app/utilies/api/activities";
 import { getCurrentUser } from "../../../../server/users";
-import { Accommodation } from "@/app/(bo)/trips/types/accommodation";
-import { Trip } from "@/app/(bo)/trips/types/trip";
+
+import { Travel } from "@/app/(bo)/trips/types/travel";
 
 export default function Map() {
-  const [accommodations, setAccommodations] = useState<Accommodation[]>([]);
+  const [travelList, setTravelList] = useState<Travel[]>([]);
 
-  const fetchAccommodations = useCallback(async () => {
+  const fetchTravelList = useCallback(async () => {
     try {
       const user = await getCurrentUser();
       const username = user?.currentUser?.name;
       if (!username) return;
       const trips = (await listTripsByUsername(username)) as Trip[];
-      const allAccommodations = trips
-        .flatMap((trip) => trip.accommodations || [])
-        .filter((a) => a.latitude && a.longitude);
-      setAccommodations(allAccommodations);
+      const allTravels = trips
+        .flatMap((trip) => trip.travelList || [])
+        .filter((t) => t.toLat && t.toLng);
+      setTravelList(allTravels);
     } catch {
-      setAccommodations([]);
+      setTravelList([]);
     }
   }, []);
 
   useEffect(() => {
-    fetchAccommodations();
-  }, [fetchAccommodations]);
+    fetchTravelList();
+  }, [fetchTravelList]);
 
   return (
     <div className="w-full h-full" style={{ minHeight: 400 }}>
-      <WorldMap accommodations={accommodations} />
+      <WorldMap travelList={travelList} />
     </div>
   );
 }
