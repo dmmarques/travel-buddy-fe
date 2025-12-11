@@ -76,16 +76,6 @@ export default function Predictions({
                         // Debug: show coordinates used
                         let debugMsg = "";
                         const accLocation = details.geometry?.location;
-                        if (accLocation) {
-                          debugMsg += `Accommodation: lat=${accLocation.lat}, lng=${accLocation.lng}\n`;
-                        } else {
-                          debugMsg += "Accommodation coordinates missing.\n";
-                        }
-                        if (destinationCoords) {
-                          debugMsg += `Destination: lat=${destinationCoords.lat}, lng=${destinationCoords.lng}`;
-                        } else {
-                          debugMsg += "Destination coordinates missing.";
-                        }
                         setDebug(debugMsg);
                         // If destinationCoords is provided, check distance
                         if (accLocation && destinationCoords) {
