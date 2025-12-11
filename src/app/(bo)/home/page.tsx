@@ -85,15 +85,15 @@ export default function Home() {
   };
 
   return (
-    <main className="relative">
+    <main className="relative overflow-auto h-full pb-8">
       {/* Top summary cards: Next Trip, Longest Trip, Shortest Trip, Trip Cost Extremes */}
-      <div className="flex flex-row gap-4 mb-4">
+      <div className="flex flex-col md:flex-row gap-4 mb-4 overflow-x-auto">
         {/* Next Trip Card as Button */}
         {(() => {
           const nextTrip = getNextIncomingTrip(trips);
           if (!nextTrip)
             return (
-              <Card className="w-100 m-2">
+              <Card className="w-full md:w-100 m-2">
                 <CardContent>
                   <p>No upcoming trips found.</p>
                 </CardContent>
@@ -120,7 +120,7 @@ export default function Home() {
               }}
               aria-label="Go to next trip planning"
             >
-              <Card className="w-100 m-2 hover:shadow-lg focus:ring-2 focus:ring-primary">
+              <Card className="w-full md:w-100 m-2 hover:shadow-lg focus:ring-2 focus:ring-primary">
                 <CardHeader>
                   <h2>Your Next Trip</h2>
                 </CardHeader>
@@ -145,7 +145,7 @@ export default function Home() {
         {(() => {
           if (!trips || trips.length === 0)
             return (
-              <Card className="w-80 m-2 hover:shadow-lg focus:ring-2 focus:ring-primary opacity-50">
+              <Card className="w-full md:w-80 m-2 hover:shadow-lg focus:ring-2 focus:ring-primary opacity-50">
                 <CardHeader>
                   <h2>Longest Trip</h2>
                 </CardHeader>
@@ -173,7 +173,7 @@ export default function Home() {
           }
           if (!longestTrip) return null;
           return (
-            <Card className="w-80 m-2 hover:shadow-lg focus:ring-2 focus:ring-primary">
+            <Card className="w-full md:w-80 m-2 hover:shadow-lg focus:ring-2 focus:ring-primary">
               <CardHeader>
                 <h2>Longest Trip</h2>
               </CardHeader>
@@ -200,7 +200,7 @@ export default function Home() {
         {(() => {
           if (!trips || trips.length === 0)
             return (
-              <Card className="w-80 m-2 hover:shadow-lg focus:ring-2 focus:ring-primary opacity-50">
+              <Card className="w-full md:w-80 m-2 hover:shadow-lg focus:ring-2 focus:ring-primary opacity-50">
                 <CardHeader>
                   <h2>Shortest Trip</h2>
                 </CardHeader>
@@ -228,7 +228,7 @@ export default function Home() {
           }
           if (!shortestTrip || !isFinite(minDays)) return null;
           return (
-            <Card className="w-80 m-2 hover:shadow-lg focus:ring-2 focus:ring-primary">
+            <Card className="w-full md:w-80 m-2 hover:shadow-lg focus:ring-2 focus:ring-primary">
               <CardHeader>
                 <h2>Shortest Trip</h2>
               </CardHeader>
@@ -257,7 +257,7 @@ export default function Home() {
         {(() => {
           if (!trips || trips.length === 0)
             return (
-              <Card className="w-80 m-2 hover:shadow-lg focus:ring-2 focus:ring-primary opacity-50">
+              <Card className="w-full md:w-80 m-2 hover:shadow-lg focus:ring-2 focus:ring-primary opacity-50">
                 <CardHeader>
                   <h2>Most and Least expensive trips</h2>
                 </CardHeader>
@@ -324,7 +324,7 @@ export default function Home() {
             }
           }
           return (
-            <Card className="w-80 m-2 hover:shadow-lg focus:ring-2 focus:ring-primary">
+            <Card className="w-full md:w-80 m-2 hover:shadow-lg focus:ring-2 focus:ring-primary">
               <CardHeader>
                 <h2>Most and Least expensive trips</h2>
               </CardHeader>
@@ -380,12 +380,12 @@ export default function Home() {
       </div>
       {/* Totals summary as Cards (always show, but empty if no trips) */}
       {!loading && !error && (
-        <div className="flex flex-wrap gap-4 mb-6">
+        <div className="flex flex-col lg:flex-row flex-wrap gap-4 mb-6">
           {/* Card 1: Trips, Activities, KMs */}
-          <div className="flex flex-row flex-1">
+          <div className="flex flex-col lg:flex-row flex-1">
             {/* Left column: Trips & Activities + More Info (stacked) */}
             <div className="flex flex-col flex-1">
-              <Card className="min-w-[260px] m-2">
+              <Card className="w-full min-w-0 lg:min-w-[260px] m-2">
                 <CardHeader>
                   <h3 className="text-lg font-semibold">Trips & Activities</h3>
                 </CardHeader>
@@ -404,7 +404,7 @@ export default function Home() {
                 </CardContent>
               </Card>
               {/* More Info Card below */}
-              <Card className="min-w-[260px] m-2 mt-0">
+              <Card className="w-full min-w-0 lg:min-w-[260px] m-2 mt-0">
                 <CardHeader>
                   <h3 className="text-lg font-semibold">More Info</h3>
                 </CardHeader>
@@ -476,7 +476,7 @@ export default function Home() {
             </div>
           </div>
           {/* Card 2: Cost Breakdown */}
-          <Card className="min-w-[260px] flex-1 m-2">
+          <Card className="w-full min-w-0 lg:min-w-[260px] flex-1 m-2">
             <CardHeader>
               <h3 className="text-lg font-semibold">
                 Cost Breakdown accross all trips
@@ -503,7 +503,7 @@ export default function Home() {
             </CardContent>
           </Card>
           {/* Card 3: Activities by Category */}
-          <Card className="min-w-[260px] flex-1 m-2">
+          <Card className="w-full min-w-0 lg:min-w-[260px] flex-1 m-2">
             <CardHeader>
               <h3 className="text-lg font-semibold">Activities by Category</h3>
             </CardHeader>
