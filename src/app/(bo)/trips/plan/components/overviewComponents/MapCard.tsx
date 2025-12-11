@@ -75,13 +75,13 @@ export default function MapCard(props: MapCardProps) {
   );
 
   return (
-    <Card className="p-4 mt-4 mb-4 h-2/3 flex flex-col justify-center">
-      <div className="p-2 w-full h-full">
+    <Card className="p-4 mt-4 mb-4 min-h-[450px] lg:h-2/3 flex flex-col overflow-hidden">
+      <div className="w-full h-full flex-1">
         <APIProvider apiKey={process.env.NEXT_PUBLIC_GOOGLE_API_KEY || ""}>
           <Map
             defaultZoom={zoom}
             defaultCenter={center}
-            style={{ width: "100%", height: "100%" }}
+            style={{ width: "100%", height: "100%", borderRadius: "8px" }}
           >
             {markerPositions.map((pos, idx) => (
               <Marker key={"marker-" + idx} position={pos} />

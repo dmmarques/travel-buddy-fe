@@ -36,8 +36,8 @@ export default function ItineraryTab({
   }, [selectedDay, trip.startDate, setSelectedDay]);
 
   return (
-    <div className="flex-1 overflow-y-auto p-6 flex gap-6">
-      <div className="flex-1 bg-white rounded-2xl shadow-md flex flex-col justify-between h-7/8">
+    <div className="flex-1 overflow-y-auto p-4 md:p-6 flex flex-col lg:flex-row gap-4 md:gap-6">
+      <div className="flex-1 bg-white rounded-2xl shadow-md flex flex-col justify-between min-h-[400px] lg:h-7/8">
         <ItineraryActivitiesCard
           trip={trip}
           selectedDay={selectedDay}
@@ -47,7 +47,7 @@ export default function ItineraryTab({
           setActivities={setActivities}
         />
       </div>
-      <div className="flex-1 bg-white rounded-2xl shadow-md flex flex-col justify-between h-7/8">
+      <div className="flex-1 bg-white rounded-2xl shadow-md flex flex-col justify-between min-h-[400px] lg:h-7/8">
         <ItineraryMap
           location={
             selectedLocation

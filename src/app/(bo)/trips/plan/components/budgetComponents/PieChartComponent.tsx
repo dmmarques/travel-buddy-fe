@@ -85,13 +85,13 @@ export function PieChartComponent({
     }, {} as Record<string, { label: string; color: string }>),
   };
   return (
-    <Card className="flex flex-col h-full w-full">
-      <CardContent className="flex-1 pb-0">
+    <Card className="flex flex-col h-full w-full overflow-visible">
+      <CardContent className="flex-1 pb-0 pt-2 px-2 overflow-visible">
         <ChartContainer
           config={tripChartConfig}
-          className="mx-auto aspect-square max-h-[300px] w-full"
+          className="mx-auto aspect-square max-h-[260px] w-full"
         >
-          <PieChart>
+          <PieChart margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>
             <Pie
               data={tripChartData}
               dataKey="value"

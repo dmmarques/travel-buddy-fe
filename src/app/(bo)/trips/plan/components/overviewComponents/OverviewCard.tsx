@@ -118,7 +118,7 @@ export default function OverviewCard({
   }
 
   return (
-    <Card className="p-4 mt-2 mb-4 h-1/2 flex flex-col justify-center relative overflow-hidden">
+    <Card className="p-4 mt-2 mb-4 md:h-1/2 flex flex-col md:justify-center relative overflow-hidden">
       {/* Animated checkmark on save - full card overlay */}
       <div
         className={
@@ -134,12 +134,12 @@ export default function OverviewCard({
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="max-w-2xl w-full mx-auto py-2 flex-1 overflow-auto relative"
+          className="w-full mx-auto py-2 flex-1 overflow-auto relative pb-16 md:pb-2"
           style={{ maxHeight: "100%", minHeight: 0 }}
         >
-          <div className="flex flex-row gap-8 w-full">
+          <div className="flex flex-col md:flex-row gap-4 md:gap-8 w-full">
             {/* Left column: tripName, budget, date */}
-            <div className="flex flex-col gap-4 basis-1/2 min-w-0">
+            <div className="flex flex-col gap-4 md:basis-1/2 min-w-0">
               <FormField
                 control={form.control}
                 name="tripName"
@@ -151,7 +151,7 @@ export default function OverviewCard({
                         placeholder="Trip Name"
                         type="text"
                         {...field}
-                        className="w-40"
+                        className="w-full md:w-40"
                       />
                     </FormControl>
                     <FormMessage />
@@ -175,7 +175,7 @@ export default function OverviewCard({
                         step={0.01}
                         {...field}
                         value={field.value ?? ""}
-                        className="w-32"
+                        className="w-full md:w-32"
                         onChange={(e) => {
                           const val = e.target.value;
                           field.onChange(val === "" ? undefined : Number(val));
@@ -204,7 +204,7 @@ export default function OverviewCard({
                           <Button
                             variant={"outline"}
                             className={cn(
-                              "w-[240px] pl-3 text-left font-normal",
+                              "w-full md:w-[240px] pl-3 text-left font-normal",
                               !field.value?.from && "text-muted-foreground"
                             )}
                           >
@@ -255,12 +255,12 @@ export default function OverviewCard({
 
             {/* Vertical separator */}
             <div
-              className="w-px bg-gray-300 mx-2"
+              className="hidden md:block w-px bg-gray-300 mx-2"
               style={{ minHeight: "130px", alignSelf: "stretch" }}
             />
 
             {/* Right column: preferences */}
-            <div className="flex flex-col gap-4 basis-1/2 min-w-0 items-start">
+            <div className="flex flex-col gap-4 md:basis-1/2 min-w-0 items-start">
               <FormField
                 control={form.control}
                 name="preferences"
@@ -331,7 +331,7 @@ export default function OverviewCard({
                 )}
               />
               {/* Totals Section */}
-              <div className="mt-6 flex flex-col justify-between gap-3 text-sm w-full">
+              <div className="mt-4 md:mt-6 flex flex-col justify-between gap-2 md:gap-3 text-sm w-full">
                 <div className="w-full flex items-center">
                   <span className="font-semibold">Total Travels:</span>
                   <span className="ml-2">
@@ -355,7 +355,7 @@ export default function OverviewCard({
           </div>
 
           {/* </div><div className="flex gap-2"> */}
-          <div className="flex gap-2 absolute bottom-0 right-0 p-4">
+          <div className="flex gap-2 mt-6 md:absolute md:bottom-0 md:right-0 md:p-4 md:bg-transparent justify-end md:border-t-0">
             <Button type="submit" disabled={!form.formState.isDirty}>
               Save
             </Button>

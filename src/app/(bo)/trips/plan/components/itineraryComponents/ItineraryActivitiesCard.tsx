@@ -72,7 +72,7 @@ export default function ItineraryActivitiesCard({
   return (
     <Card className="flex-1 flex flex-col relative">
       {/* Top bar with days */}
-      <div className="flex gap-2 p-2 border-b overflow-x-auto justify-center">
+      <div className="flex gap-1 md:gap-2 p-2 border-b overflow-x-auto justify-start md:justify-center">
         {days.length === 0 && (
           <span className="text-gray-400">No trip days</span>
         )}
@@ -85,7 +85,7 @@ export default function ItineraryActivitiesCard({
                 : "secondary"
             }
             onClick={() => setSelectedDay(day)}
-            className="min-w-[64px] hover:bg-gray-400 hover:text-white"
+            className="min-w-[56px] md:min-w-[64px] text-xs md:text-sm hover:bg-gray-400 hover:text-white shrink-0"
           >
             {format(day, "MMM d")}
           </Button>
@@ -130,8 +130,10 @@ export default function ItineraryActivitiesCard({
                 </div>
               </Card>
             </div>
-            <DataTable
-              columns={baseColumns({
+            <div className="overflow-x-auto -mx-4 md:mx-0">
+              <div className="min-w-[600px] px-4 md:px-0">
+                <DataTable
+                  columns={baseColumns({
                 onDelete: async (activity) => {
                   if (!trip.id && !trip.tripId) {
                     toast.error("Missing trip id");
@@ -168,6 +170,8 @@ export default function ItineraryActivitiesCard({
               })}
               data={activitiesForDay}
             />
+              </div>
+            </div>
           </>
         ) : (
           <div className="text-gray-400">Select a day to view activities.</div>

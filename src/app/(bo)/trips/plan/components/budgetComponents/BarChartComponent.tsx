@@ -33,7 +33,7 @@ export function BarChartComponent({
         data={chartData}
         width={400}
         height={180}
-        margin={{ top: 20 }}
+        margin={{ top: 20, bottom: 30 }}
       >
         <CartesianGrid vertical={false} />
         <XAxis

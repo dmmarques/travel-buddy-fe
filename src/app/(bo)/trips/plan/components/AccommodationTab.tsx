@@ -57,8 +57,8 @@ export default function AccommodationTab({
   }
 
   return (
-    <div className="flex-1 overflow-y-auto p-6 flex gap-6">
-      <div className="flex-1 bg-white rounded-2xl shadow-md flex flex-col justify-between h-7/8">
+    <div className="flex-1 overflow-y-auto p-4 md:p-6 flex flex-col lg:flex-row gap-4 md:gap-6">
+      <div className="flex-1 bg-white rounded-2xl shadow-md flex flex-col justify-between min-h-[400px] lg:h-7/8">
         <AccommodationCard
           trip={trip}
           onAccommodationAdded={handleAccommodationAdded}
@@ -66,7 +66,7 @@ export default function AccommodationTab({
           destinationCoords={destinationCoords}
         />
       </div>
-      <div className="flex-1 bg-white rounded-2xl shadow-md flex flex-col justify-between h-7/8">
+      <div className="flex-1 bg-white rounded-2xl shadow-md flex flex-col justify-between min-h-[400px] lg:h-7/8">
         <AccommodationMap
           markerPositions={markerPositions}
           pickedCoordinates={pickedCoordinates}

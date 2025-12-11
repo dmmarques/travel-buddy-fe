@@ -233,12 +233,12 @@ export default function TripsDashboard() {
   }, [trips.length]);
 
   return (
-    <div className="flex min-h-[calc(100vh-2rem)] w-full items-center justify-center p-4">
-      <div className="flex w-full max-w-5xl items-stretch gap-8">
+    <div className="flex min-h-[calc(100vh-2rem)] w-full items-center justify-center p-4 md:p-6">
+      <div className="flex flex-col lg:flex-row w-full max-w-5xl items-center gap-6 lg:gap-8">
         {/* Left: Trips Carousel */}
-        <div className="flex-1 flex items-center justify-center">
+        <div className="flex-1 flex justify-center w-full py-4">
           <div className="mx-auto w-full max-w-sm text-center">
-            <Card className="mb-3">
+            <Card>
               <CardHeader>
                 <CardTitle>Your Trips</CardTitle>
                 <CardDescription>Click a card to view details</CardDescription>
@@ -469,10 +469,11 @@ export default function TripsDashboard() {
         </div>
 
         {/* Divider */}
-        <div className="w-px bg-border" />
+        <div className="hidden lg:block w-px bg-border" />
+        <div className="lg:hidden h-px bg-border w-full" />
 
         {/* Right: New Trip Planner */}
-        <div className="flex-1 flex items-center justify-center">
+        <div className="flex-1 flex items-center justify-center w-full">
           <Card className="w-[360px]">
             <CardHeader>
               <CardHeader className="flex flex-col items-center justify-center text-center">

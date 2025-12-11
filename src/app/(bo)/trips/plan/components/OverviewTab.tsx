@@ -37,9 +37,9 @@ export default function OverviewTab({
     }
   };
   return (
-    <div className="flex flex-1">
+    <div className="flex flex-col lg:flex-row flex-1 overflow-y-auto lg:overflow-hidden">
       {/* Left column */}
-      <div className="flex-1 min-w-0 flex flex-col p-8">
+      <div className="flex-1 min-w-0 flex flex-col p-4 md:p-6 lg:p-8 lg:overflow-y-auto">
         <OverviewCard trip={trip} onTripUpdate={onTripUpdate} />
         <ItineraryCard
           trip={trip}
@@ -48,8 +48,8 @@ export default function OverviewTab({
         />
       </div>
       {/* Right column */}
-      <div className="flex-1 min-w-0 flex flex-col p-8">
-        <div className="flex flex-row gap-4 mb-4 h-1/8 items-stretch">
+      <div className="flex-1 min-w-0 flex flex-col p-4 md:p-6 lg:p-8 lg:overflow-y-auto">
+        <div className="flex flex-col sm:flex-row gap-4 mb-4 items-stretch">
           <DurationCard trip={trip} />
           <TravellersCard trip={trip} />
           <BudgetCard trip={trip} onGoToBudgetTab={onGoToBudgetTab} />
