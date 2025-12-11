@@ -134,42 +134,42 @@ export default function ItineraryActivitiesCard({
               <div className="min-w-[600px] px-4 md:px-0">
                 <DataTable
                   columns={baseColumns({
-                onDelete: async (activity) => {
-                  if (!trip.id && !trip.tripId) {
-                    toast.error("Missing trip id");
-                    return;
-                  }
-                  if (!activity.id) {
-                    toast.error("Missing activity id");
-                    return;
-                  }
-                  try {
-                    const tripId = String(trip.id ?? trip.tripId);
-                    await deleteActivity(tripId, activity.id);
-                    setActivities((prev) =>
-                      prev.filter((a) => a.id !== activity.id)
-                    );
-                    toast.success("Activity deleted!");
-                  } catch (e) {
-                    console.error("Failed to delete activity", e);
-                    toast.error("Failed to delete activity");
-                  }
-                },
-                onEdit: (activity) => {
-                  setEditingActivity(activity);
-                  setPickedLocation(
-                    activity.latitude && activity.longitude
-                      ? {
-                          lat: Number(activity.latitude),
-                          lng: Number(activity.longitude),
-                        }
-                      : null
-                  );
-                  setOpen(true);
-                },
-              })}
-              data={activitiesForDay}
-            />
+                    onDelete: async (activity) => {
+                      if (!trip.id && !trip.tripId) {
+                        toast.error("Missing trip id");
+                        return;
+                      }
+                      if (!activity.id) {
+                        toast.error("Missing activity id");
+                        return;
+                      }
+                      try {
+                        const tripId = String(trip.id ?? trip.tripId);
+                        await deleteActivity(tripId, activity.id);
+                        setActivities((prev) =>
+                          prev.filter((a) => a.id !== activity.id)
+                        );
+                        toast.success("Activity deleted!");
+                      } catch (e) {
+                        console.error("Failed to delete activity", e);
+                        toast.error("Failed to delete activity");
+                      }
+                    },
+                    onEdit: (activity) => {
+                      setEditingActivity(activity);
+                      setPickedLocation(
+                        activity.latitude && activity.longitude
+                          ? {
+                              lat: Number(activity.latitude),
+                              lng: Number(activity.longitude),
+                            }
+                          : null
+                      );
+                      setOpen(true);
+                    },
+                  })}
+                  data={activitiesForDay}
+                />
               </div>
             </div>
           </>
@@ -180,8 +180,11 @@ export default function ItineraryActivitiesCard({
 
       {/* Add/Edit Activity Overlay (local to card) */}
       {open && (
-        <div className="absolute inset-0 z-30 flex items-center justify-center bg-black/30">
-          <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6 relative animate-in fade-in border border-gray-300">
+        <div className="fixed top-0 left-0 z-50 flex items-start justify-start w-full h-full pointer-events-none">
+          <div
+            className="bg-white rounded-lg shadow-xl max-w-md w-full p-6 relative animate-in fade-in border border-gray-300 mt-24 ml-32 pointer-events-auto"
+            style={{ minWidth: 600 }}
+          >
             <div className="text-base font-bold mb-2">
               {editingActivity ? "Edit Activity" : "Add Activity"}
             </div>
