@@ -159,7 +159,7 @@ export default function AppMap() {
 
             {/* Trip Filter Buttons and List */}
             <div className="mt-8 text-left">
-              <div className="flex gap-4 mb-4">
+              <div className="flex gap-4 mb-4 justify-center">
                 {/* ShadCN Buttons for trip filter */}
                 <Button
                   variant={tripFilter === "past" ? "default" : "outline"}
@@ -176,7 +176,13 @@ export default function AppMap() {
                   Future Trips
                 </Button>
               </div>
-              <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 text-gray-700">
+              <ul
+                className={
+                  filteredRanges.length === 1
+                    ? "flex justify-center text-gray-700"
+                    : "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 text-gray-700"
+                }
+              >
                 {filteredRanges.length > 0 ? (
                   filteredRanges.map((r) => (
                     <li
