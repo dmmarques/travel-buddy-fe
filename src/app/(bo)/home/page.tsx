@@ -122,20 +122,15 @@ export default function Home() {
             >
               <Card className="w-full md:w-100 m-2 hover:shadow-lg focus:ring-2 focus:ring-primary">
                 <CardHeader>
-                  <h2>Your Next Trip</h2>
+                  <h2 className="text-sm font-medium text-muted-foreground">Next Trip</h2>
                 </CardHeader>
                 <CardContent>
-                  <div>
-                    <strong>{nextTrip.name}</strong>
-                    {nextTrip.destination && <> - {nextTrip.destination}</>}
-                    {nextTrip.startDate && nextTrip.endDate && (
-                      <>
-                        {" "}
-                        {formatDateDMY(nextTrip.startDate)} to{" "}
-                        {formatDateDMY(nextTrip.endDate)}
-                      </>
-                    )}
-                  </div>
+                  <div className="text-xl font-semibold">{nextTrip.name}</div>
+                  {nextTrip.startDate && (
+                    <div className="text-sm text-muted-foreground mt-1">
+                      {formatDateDMY(nextTrip.startDate)}
+                    </div>
+                  )}
                 </CardContent>
               </Card>
             </button>
@@ -175,22 +170,12 @@ export default function Home() {
           return (
             <Card className="w-full md:w-80 m-2 hover:shadow-lg focus:ring-2 focus:ring-primary">
               <CardHeader>
-                <h2>Longest Trip</h2>
+                <h2 className="text-sm font-medium text-muted-foreground">Longest Trip</h2>
               </CardHeader>
               <CardContent>
-                <div>
-                  <strong>{longestTrip.name}</strong>
-                  {longestTrip.destination && <> - {longestTrip.destination}</>}
-                  {longestTrip.startDate && longestTrip.endDate && (
-                    <>
-                      {" "}
-                      {formatDateDMY(longestTrip.startDate)} to{" "}
-                      {formatDateDMY(longestTrip.endDate)}
-                    </>
-                  )}
-                  <div className="mt-2 text-sm text-muted-foreground">
-                    <strong>Duration:</strong> {maxDays} days
-                  </div>
+                <div className="text-xl font-semibold">{longestTrip.name}</div>
+                <div className="text-sm text-muted-foreground mt-1">
+                  {maxDays} days
                 </div>
               </CardContent>
             </Card>
@@ -230,24 +215,12 @@ export default function Home() {
           return (
             <Card className="w-full md:w-80 m-2 hover:shadow-lg focus:ring-2 focus:ring-primary">
               <CardHeader>
-                <h2>Shortest Trip</h2>
+                <h2 className="text-sm font-medium text-muted-foreground">Shortest Trip</h2>
               </CardHeader>
               <CardContent>
-                <div>
-                  <strong>{shortestTrip.name}</strong>
-                  {shortestTrip.destination && (
-                    <> - {shortestTrip.destination}</>
-                  )}
-                  {shortestTrip.startDate && shortestTrip.endDate && (
-                    <>
-                      {" "}
-                      {formatDateDMY(shortestTrip.startDate)} to{" "}
-                      {formatDateDMY(shortestTrip.endDate)}
-                    </>
-                  )}
-                  <div className="mt-2 text-sm text-muted-foreground">
-                    <strong>Duration:</strong> {minDays} days
-                  </div>
+                <div className="text-xl font-semibold">{shortestTrip.name}</div>
+                <div className="text-sm text-muted-foreground mt-1">
+                  {minDays} days
                 </div>
               </CardContent>
             </Card>
@@ -326,51 +299,35 @@ export default function Home() {
           return (
             <Card className="w-full md:w-80 m-2 hover:shadow-lg focus:ring-2 focus:ring-primary">
               <CardHeader>
-                <h2>Most and Least expensive trips</h2>
+                <h2 className="text-sm font-medium text-muted-foreground">Trip Costs</h2>
               </CardHeader>
               <CardContent>
-                <div className="text-muted-foreground text-sm space-y-2">
-                  <div>
-                    <strong>Most Expensive:</strong>{" "}
-                    {mostExpensive ? (
-                      <>
-                        {mostExpensive.name}
-                        {typeof getTripCost(mostExpensive) === "number" && (
-                          <>
-                            {" "}
-                            (€
-                            {getTripCost(mostExpensive).toLocaleString(
-                              undefined,
-                              { maximumFractionDigits: 2 }
-                            )}
-                            )
-                          </>
-                        )}
-                      </>
-                    ) : (
-                      "N/A"
-                    )}
+                <div className="flex gap-4">
+                  <div className="flex-1">
+                    <div className="text-xs text-muted-foreground">Most</div>
+                    <div className="text-lg font-semibold">
+                      {mostExpensive ? (
+                        <>
+                          €{getTripCost(mostExpensive).toLocaleString(undefined, { maximumFractionDigits: 0 })}
+                        </>
+                      ) : (
+                        "N/A"
+                      )}
+                    </div>
+                    {mostExpensive && <div className="text-xs text-muted-foreground truncate">{mostExpensive.name}</div>}
                   </div>
-                  <div>
-                    <strong>Least Expensive:</strong>{" "}
-                    {leastExpensive ? (
-                      <>
-                        {leastExpensive.name}
-                        {typeof getTripCost(leastExpensive) === "number" && (
-                          <>
-                            {" "}
-                            (€
-                            {getTripCost(leastExpensive).toLocaleString(
-                              undefined,
-                              { maximumFractionDigits: 2 }
-                            )}
-                            )
-                          </>
-                        )}
-                      </>
-                    ) : (
-                      "N/A"
-                    )}
+                  <div className="flex-1">
+                    <div className="text-xs text-muted-foreground">Least</div>
+                    <div className="text-lg font-semibold">
+                      {leastExpensive ? (
+                        <>
+                          €{getTripCost(leastExpensive).toLocaleString(undefined, { maximumFractionDigits: 0 })}
+                        </>
+                      ) : (
+                        "N/A"
+                      )}
+                    </div>
+                    {leastExpensive && <div className="text-xs text-muted-foreground truncate">{leastExpensive.name}</div>}
                   </div>
                 </div>
               </CardContent>
@@ -382,31 +339,34 @@ export default function Home() {
       {!loading && !error && (
         <div className="flex flex-col lg:flex-row flex-wrap gap-4 mb-6">
           {/* Card 1: Trips, Activities, KMs */}
-          <div className="flex flex-col lg:flex-row flex-1">
+          <div className="flex flex-col lg:flex-row flex-1 gap-4">
             {/* Left column: Trips & Activities + More Info (stacked) */}
-            <div className="flex flex-col flex-1">
-              <Card className="w-full min-w-0 lg:min-w-[260px] m-2">
+            <div className="flex flex-col flex-1 m-2">
+              <Card className="w-full min-w-0 lg:min-w-[260px] flex-1">
                 <CardHeader>
-                  <h3 className="text-lg font-semibold">Trips & Activities</h3>
+                  <h3 className="text-sm font-medium text-muted-foreground">Overview</h3>
                 </CardHeader>
                 <CardContent>
-                  <div className="mb-2">
-                    <strong>Total Trips:</strong> {trips.length}
-                  </div>
-                  <div className="mb-2">
-                    <strong>Total Activities:</strong>{" "}
-                    {getTotalPlannedActivities(trips)}
-                  </div>
-                  <div className="mb-2">
-                    <strong>Traveled Kms:</strong>{" "}
-                    {getTotalKMs(trips).toLocaleString()}
+                  <div className="flex gap-4">
+                    <div className="flex-1">
+                      <div className="text-2xl font-bold">{trips.length}</div>
+                      <div className="text-xs text-muted-foreground">Trips</div>
+                    </div>
+                    <div className="flex-1">
+                      <div className="text-2xl font-bold">{getTotalPlannedActivities(trips)}</div>
+                      <div className="text-xs text-muted-foreground">Activities</div>
+                    </div>
+                    <div className="flex-1">
+                      <div className="text-2xl font-bold">{getTotalKMs(trips).toLocaleString()}</div>
+                      <div className="text-xs text-muted-foreground">KMs</div>
+                    </div>
                   </div>
                 </CardContent>
               </Card>
               {/* More Info Card below */}
-              <Card className="w-full min-w-0 lg:min-w-[260px] m-2 mt-0">
+              <Card className="w-full min-w-0 lg:min-w-[260px] flex-1 mt-4">
                 <CardHeader>
-                  <h3 className="text-lg font-semibold">More Info</h3>
+                  <h3 className="text-sm font-medium text-muted-foreground">Averages</h3>
                 </CardHeader>
                 <CardContent>
                   {(() => {
@@ -442,31 +402,30 @@ export default function Home() {
                     const avgDuration =
                       countedTrips > 0 ? totalDays / countedTrips : 0;
                     return (
-                      <div className="text-muted-foreground text-sm space-y-2">
+                      <div className="grid grid-cols-2 gap-3">
                         <div>
-                          <strong>Avg. Accommodation Cost:</strong> €
-                          {avgAccommodation.toLocaleString(undefined, {
-                            maximumFractionDigits: 2,
-                          })}
+                          <div className="text-lg font-semibold">
+                            €{avgAccommodation.toLocaleString(undefined, { maximumFractionDigits: 0 })}
+                          </div>
+                          <div className="text-xs text-muted-foreground">Accommodation</div>
                         </div>
                         <div>
-                          <strong>Avg. Activities Cost:</strong> €
-                          {avgActivities.toLocaleString(undefined, {
-                            maximumFractionDigits: 2,
-                          })}
+                          <div className="text-lg font-semibold">
+                            €{avgActivities.toLocaleString(undefined, { maximumFractionDigits: 0 })}
+                          </div>
+                          <div className="text-xs text-muted-foreground">Activities</div>
                         </div>
                         <div>
-                          <strong>Avg. Travel Cost:</strong> €
-                          {avgTravel.toLocaleString(undefined, {
-                            maximumFractionDigits: 2,
-                          })}
+                          <div className="text-lg font-semibold">
+                            €{avgTravel.toLocaleString(undefined, { maximumFractionDigits: 0 })}
+                          </div>
+                          <div className="text-xs text-muted-foreground">Travel</div>
                         </div>
                         <div>
-                          <strong>Avg. Trip Duration:</strong>{" "}
-                          {avgDuration.toLocaleString(undefined, {
-                            maximumFractionDigits: 1,
-                          })}{" "}
-                          days
+                          <div className="text-lg font-semibold">
+                            {avgDuration.toLocaleString(undefined, { maximumFractionDigits: 0 })} days
+                          </div>
+                          <div className="text-xs text-muted-foreground">Duration</div>
                         </div>
                       </div>
                     );
@@ -474,47 +433,63 @@ export default function Home() {
                 </CardContent>
               </Card>
             </div>
-          </div>
-          {/* Card 2: Cost Breakdown */}
-          <Card className="w-full min-w-0 lg:min-w-[260px] flex-1 m-2">
-            <CardHeader>
-              <h3 className="text-lg font-semibold">
-                Cost Breakdown accross all trips
-              </h3>
-            </CardHeader>
-            <CardContent>
-              {(() => {
-                if (!trips || trips.length === 0) {
+            {/* Card 2: Cost Breakdown */}
+            <Card className="w-full min-w-0 lg:min-w-[260px] flex-1 m-2">
+              <CardHeader>
+                <h3 className="text-sm font-medium text-muted-foreground">
+                  Cost Breakdown
+                </h3>
+              </CardHeader>
+              <CardContent>
+                {(() => {
+                  if (!trips || trips.length === 0) {
+                    return (
+                      <div className="text-muted-foreground text-sm">No data</div>
+                    );
+                  }
+                  const breakdown = getPlannedCostsBreakdown(trips);
+                  const total = getTotalPlannedCosts(trips);
                   return (
-                    <div className="text-muted-foreground text-sm">No data</div>
+                    <>
+                      <OverallCostPieChart
+                        total={total}
+                        accommodation={breakdown.accommodation}
+                        travel={breakdown.travel}
+                        activities={breakdown.activities}
+                      />
+                      <div className="flex gap-4 mt-4 text-xs justify-center">
+                        <div className="flex items-center gap-1">
+                          <div className="w-3 h-3 rounded-sm bg-chart-1"></div>
+                          <span className="text-muted-foreground">Accommodation</span>
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <div className="w-3 h-3 rounded-sm bg-chart-2"></div>
+                          <span className="text-muted-foreground">Travel</span>
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <div className="w-3 h-3 rounded-sm bg-chart-3"></div>
+                          <span className="text-muted-foreground">Activities</span>
+                        </div>
+                      </div>
+                    </>
                   );
-                }
-                const breakdown = getPlannedCostsBreakdown(trips);
-                const total = getTotalPlannedCosts(trips);
-                return (
-                  <OverallCostPieChart
-                    total={total}
-                    accommodation={breakdown.accommodation}
-                    travel={breakdown.travel}
-                    activities={breakdown.activities}
-                  />
-                );
-              })()}
-            </CardContent>
-          </Card>
-          {/* Card 3: Activities by Category */}
-          <Card className="w-full min-w-0 lg:min-w-[260px] flex-1 m-2">
-            <CardHeader>
-              <h3 className="text-lg font-semibold">Activities by Category</h3>
-            </CardHeader>
-            <CardContent>
-              {trips && trips.length > 0 ? (
-                <OverallActivityNumbers trips={trips} />
-              ) : (
-                <div className="text-muted-foreground text-sm">No data</div>
-              )}
-            </CardContent>
-          </Card>
+                })()}
+              </CardContent>
+            </Card>
+            {/* Card 3: Activities by Category */}
+            <Card className="w-full min-w-0 lg:min-w-[260px] flex-1 m-2">
+              <CardHeader>
+                <h3 className="text-sm font-medium text-muted-foreground">Activities</h3>
+              </CardHeader>
+              <CardContent>
+                {trips && trips.length > 0 ? (
+                  <OverallActivityNumbers trips={trips} />
+                ) : (
+                  <div className="text-muted-foreground text-sm">No data</div>
+                )}
+              </CardContent>
+            </Card>
+          </div>
         </div>
       )}
       {/* Overlay for no trips */}
@@ -525,7 +500,7 @@ export default function Home() {
         >
           <div className="text-center p-8 rounded-lg shadow-lg bg-white/90 border border-gray-200">
             <p className="text-lg font-semibold mb-4">
-              We noticed you haven&apos;t planned any trips yet.
+              No trips planned yet
             </p>
             <Button
               className="underline"
@@ -534,7 +509,7 @@ export default function Home() {
               variant="default"
               type="button"
             >
-              Start planning your first adventure!
+              Start planning
             </Button>
           </div>
         </div>
