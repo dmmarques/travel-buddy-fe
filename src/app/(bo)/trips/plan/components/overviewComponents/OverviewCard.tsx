@@ -256,7 +256,7 @@ export default function OverviewCard({
             {/* Vertical separator */}
             <div
               className="w-px bg-gray-300 mx-2"
-              style={{ minHeight: "280px", alignSelf: "stretch" }}
+              style={{ minHeight: "130px", alignSelf: "stretch" }}
             />
 
             {/* Right column: preferences */}
@@ -331,10 +331,7 @@ export default function OverviewCard({
                 )}
               />
               {/* Totals Section */}
-              <div
-                className="mt-6 flex flex-col justify-between gap-6 text-sm w-full"
-                style={{ minHeight: "120px" }}
-              >
+              <div className="mt-6 flex flex-col justify-between gap-3 text-sm w-full">
                 <div className="w-full flex items-center">
                   <span className="font-semibold">Total Travels:</span>
                   <span className="ml-2">
