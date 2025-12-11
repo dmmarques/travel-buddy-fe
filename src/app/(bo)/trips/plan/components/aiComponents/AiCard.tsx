@@ -44,7 +44,7 @@ export default function AiCard({
     );
   }
 
-  // Only use travels for recommendations if available, otherwise use accommodations
+  // Only use the first travel for recommendations if available, otherwise use accommodations
   const cityCountryGroups: {
     [key: string]: {
       city: string;
@@ -55,32 +55,32 @@ export default function AiCard({
   } = {};
 
   if (travelList.length > 0) {
-    travelList.forEach((travel) => {
-      let city = "Unknown City";
-      let country = "Unknown Country";
-      // If travel.name is in format 'Origin - Destination', use Destination
-      if (travel.name) {
-        const parts = travel.name.split("-");
-        if (parts.length === 2) {
-          // Destination part
-          const dest = parts[1].trim();
-          // Try to split city and country by last comma
-          const destParts = dest.split(",");
-          if (destParts.length >= 2) {
-            city = destParts.slice(0, -1).join(",").trim();
-            country = destParts[destParts.length - 1].trim();
-          } else {
-            city = dest;
-          }
+    // Only process the first travel
+    const travel = travelList[0];
+    let city = "Unknown City";
+    let country = "Unknown Country";
+    // If travel.name is in format 'Origin - Destination', use Destination
+    if (travel.name) {
+      const parts = travel.name.split("-");
+      if (parts.length === 2) {
+        // Destination part
+        const dest = parts[1].trim();
+        // Try to split city and country by last comma
+        const destParts = dest.split(",");
+        if (destParts.length >= 2) {
+          city = destParts.slice(0, -1).join(",").trim();
+          country = destParts[destParts.length - 1].trim();
         } else {
-          city = travel.name;
+          city = dest;
         }
+      } else {
+        city = travel.name;
       }
-      const key = `${city},${country}`;
-      if (!cityCountryGroups[key])
-        cityCountryGroups[key] = { city, country, accs: [], travels: [] };
-      cityCountryGroups[key].travels.push(travel);
-    });
+    }
+    const key = `${city},${country}`;
+    if (!cityCountryGroups[key])
+      cityCountryGroups[key] = { city, country, accs: [], travels: [] };
+    cityCountryGroups[key].travels.push(travel);
   } else {
     accommodations.forEach((acc) => {
       let city = "Unknown City";
