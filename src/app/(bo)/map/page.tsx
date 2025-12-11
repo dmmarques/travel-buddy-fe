@@ -6,6 +6,7 @@ import { listTripsByUsername } from "@/app/utilies/api/activities";
 import { getCurrentUser } from "../../../../server/users";
 
 import { Travel } from "@/app/(bo)/trips/types/travel";
+import { Trip } from "@/app/(bo)/trips/types/trip";
 
 export default function Map() {
   const [travelList, setTravelList] = useState<Travel[]>([]);
