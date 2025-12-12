@@ -189,10 +189,10 @@ export default function AiCard({
           return (
             <div
               key={key}
-              className="border rounded-lg p-4 h-[500px] flex flex-col relative"
+              className="rounded-lg p-4 h-[700px] flex flex-col relative overflow-hidden"
             >
               <Button
-                className="absolute top-4 right-4 text-white px-3 py-1 rounded shadow"
+                className="absolute top-4 right-4 text-white px-3 py-1 rounded shadow z-10"
                 aria-label={`Action for ${city}`}
                 onClick={() =>
                   handleGetSuggestions(key, city, country, totalDays)
@@ -234,10 +234,7 @@ export default function AiCard({
                 })}
               </div>
               {results[key] && (
-                <div
-                  className="mt-2 text-sm text-black bg-gray-50 rounded p-2"
-                  style={{ maxHeight: "500px", overflowY: "auto" }}
-                >
+                <div className="mt-2 text-sm text-black bg-gray-50 rounded p-2 flex-1 overflow-y-auto min-h-0">
                   {results[key].error ? (
                     results[key].error
                   ) : Array.isArray(results[key].data) ? (

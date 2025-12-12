@@ -39,8 +39,8 @@ export function AiTab({
   trip,
 }: AiTabProps) {
   return (
-    <div className="flex-1 overflow-y-auto p-6 flex gap-6">
-      <div className="flex-1 bg-white rounded-2xl shadow-md flex flex-col h-7/8 p-4">
+    <div className="flex-1 overflow-y-auto p-6 flex flex-col lg:flex-row gap-6">
+      <div className="w-full lg:flex-1 bg-white rounded-2xl shadow-md flex flex-col min-h-[500px] lg:h-7/8 p-4 overflow-hidden">
         <AiCard
           accommodations={accommodations}
           travelList={travelList}
@@ -49,7 +49,7 @@ export function AiTab({
           trip={trip}
         />
       </div>
-      <div className="flex-1 bg-white rounded-2xl shadow-md flex flex-col justify-between h-7/8">
+      <div className="w-full lg:flex-1 bg-white rounded-2xl shadow-md flex flex-col justify-between min-h-[500px] lg:h-7/8">
         <AiMap />
       </div>
     </div>
