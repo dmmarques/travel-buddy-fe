@@ -286,6 +286,23 @@ describe('getNights', () => {
 
 ## Configuration
 
+### TypeScript Config
+
+Test files are excluded from the Next.js build in [`tsconfig.json`](tsconfig.json):
+
+```json
+{
+  "exclude": [
+    "node_modules",
+    "**/*.test.ts",
+    "**/*.test.tsx",
+    "src/test"
+  ]
+}
+```
+
+This ensures test files don't interfere with production builds.
+
 ### Vitest Config
 
 The Vitest configuration is in [`vitest.config.ts`](vitest.config.ts):
