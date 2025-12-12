@@ -3,7 +3,6 @@
 import { Activity } from "@/app/(bo)/trips/types/activity";
 import { ColumnDef } from "@tanstack/react-table";
 import {
-  MoreHorizontal,
   ArrowUpDown,
   Utensils,
   Volleyball,
@@ -18,14 +17,6 @@ import {
   HoverCardTrigger,
   HoverCardContent,
 } from "@/components/ui/hover-card";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 
 // Map category names to Lucide icons
 const categoryIconMap: Record<string, React.ReactNode> = {
@@ -95,27 +86,6 @@ export const columns: ColumnDef<Activity>[] = [
     cell: ({ row }) => {
       const cost = row.original.cost;
       return <span>€{cost}</span>;
-    },
-  },
-  {
-    id: "actions",
-    cell: () => {
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>Edit</DropdownMenuItem>
-            <DropdownMenuItem>Delete Expense</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      );
     },
   },
 ];

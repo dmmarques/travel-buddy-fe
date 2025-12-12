@@ -27,6 +27,7 @@ import {
   ChartConfig,
   ChartContainer,
   ChartLegend,
+  ChartLegendContent,
 } from "@/components/ui/chart";
 
 export const description = "A pie chart with a legend";
@@ -91,7 +92,7 @@ export function PieChartComponent({
           config={tripChartConfig}
           className="mx-auto aspect-square max-h-[260px] w-full"
         >
-          <PieChart margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>
+          <PieChart>
             <Pie
               data={tripChartData}
               dataKey="value"
@@ -104,53 +105,9 @@ export function PieChartComponent({
               }}
             />
             <ChartLegend
-              content={({ payload }) => (
-                <div
-                  className="mt-6 grid w-full"
-                  style={{
-                    gridTemplateColumns: `repeat(${
-                      payload?.length || 1
-                    }, minmax(0, 1fr))`,
-                    gap: "8px",
-                  }}
-                >
-                  {(payload ?? []).map(
-                    (entry: { value: string; color?: string }) => (
-                      <span
-                        key={entry.value}
-                        className="flex flex-col items-center gap-1"
-                      >
-                        <span
-                          className="inline-flex items-center justify-center rounded-md"
-                          style={{
-                            background: entry.color || "var(--chart-7)",
-                            width: 23,
-                            height: 23,
-                          }}
-                        >
-                          {categoryIconMap[entry.value] ? (
-                            React.cloneElement(
-                              categoryIconMap[
-                                entry.value
-                              ] as React.ReactElement<
-                                React.SVGProps<SVGSVGElement>
-                              >,
-                              { width: 16, height: 16, stroke: "black" }
-                            )
-                          ) : (
-                            <HelpCircle width={16} height={16} stroke="black" />
-                          )}
-                        </span>
-                        <span className="text-[10px] font-medium">
-                          {entry.value.charAt(0).toUpperCase() +
-                            entry.value.slice(1)}
-                        </span>
-                      </span>
-                    )
-                  )}
-                </div>
-              )}
-              className="flex-wrap gap-2 *:basis-1/4 *:justify-center"
+              content={<ChartLegendContent />}
+              verticalAlign="bottom"
+              height={36}
             />
           </PieChart>
         </ChartContainer>

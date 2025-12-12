@@ -6,6 +6,8 @@ import {
   ChartConfig,
   ChartContainer,
   ChartTooltip,
+  ChartLegend,
+  ChartLegendContent,
 } from "@/components/ui/chart";
 import React from "react";
 
@@ -18,7 +20,7 @@ export function BarChartComponent({
 }) {
   const config = {
     cost: {
-      label: "Cost",
+      label: "Cost Per Day",
       color: "var(--chart-1)",
     },
   } satisfies ChartConfig;
@@ -69,6 +71,7 @@ export function BarChartComponent({
             return null;
           }}
         />
+        <ChartLegend content={<ChartLegendContent />} />
         <Bar dataKey="cost" fill="var(--color-desktop)" radius={8}>
           <LabelList position="inside" className="fill-white" fontSize={12} />
         </Bar>
