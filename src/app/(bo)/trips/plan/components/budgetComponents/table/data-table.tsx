@@ -54,8 +54,8 @@ export function DataTable<TData, TValue>({
   return (
     <div className="h-full flex flex-col">
       <div className="flex flex-col flex-1 overflow-hidden rounded-md border">
-        <div className="flex-1 overflow-auto">
-          <Table>
+        <div className="flex-1 overflow-auto min-h-0 relative">
+          <Table className="min-w-[600px]">
             <TableHeader>
               {table.getHeaderGroups().map((headerGroup) => (
                 <TableRow key={headerGroup.id}>
@@ -76,31 +76,43 @@ export function DataTable<TData, TValue>({
             </TableHeader>
             <TableBody>
               {table.getRowModel().rows?.length ? (
-                table.getRowModel().rows.map((row) => {
-                  // Highlight if category matches selectedCategory
-                  // row.original is Activity type
-                  const rowCategory = (row.original as Activity)?.category;
-                  const isHighlighted =
-                    selectedCategory && rowCategory === selectedCategory;
-                  return (
-                    <TableRow
-                      key={row.id}
-                      data-state={row.getIsSelected() && "selected"}
-                      style={
-                        isHighlighted ? { backgroundColor: "#ffeeba" } : {}
-                      }
-                    >
-                      {row.getVisibleCells().map((cell) => (
-                        <TableCell key={cell.id} className="text-center">
-                          {flexRender(
-                            cell.column.columnDef.cell,
-                            cell.getContext()
-                          )}
+                <>
+                  {table.getRowModel().rows.map((row) => {
+                    // Highlight if category matches selectedCategory
+                    // row.original is Activity type
+                    const rowCategory = (row.original as Activity)?.category;
+                    const isHighlighted =
+                      selectedCategory && rowCategory === selectedCategory;
+                    return (
+                      <TableRow
+                        key={row.id}
+                        data-state={row.getIsSelected() && "selected"}
+                        style={
+                          isHighlighted ? { backgroundColor: "#ffeeba" } : {}
+                        }
+                      >
+                        {row.getVisibleCells().map((cell) => (
+                          <TableCell key={cell.id} className="text-center">
+                            {flexRender(
+                              cell.column.columnDef.cell,
+                              cell.getContext()
+                            )}
+                          </TableCell>
+                        ))}
+                      </TableRow>
+                    );
+                  })}
+                  {/* Add empty rows to fill remaining space */}
+                  {Array.from({ length: 7 - table.getRowModel().rows.length }).map((_, idx) => (
+                    <TableRow key={`empty-${idx}`}>
+                      {columns.map((_, cellIdx) => (
+                        <TableCell key={cellIdx} className="text-center h-12">
+                          &nbsp;
                         </TableCell>
                       ))}
                     </TableRow>
-                  );
-                })
+                  ))}
+                </>
               ) : (
                 <TableRow>
                   <TableCell
